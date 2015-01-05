@@ -45,15 +45,15 @@ public class Locations {
 
             Marker marker = null;
             if(parentName != null) {
-                marker = new Room(venue.getName(), venue.getShortName(), venue.getPixelX(),
+                marker = new Room(venue.getDbId(), venue.getName(), venue.getShortName(), venue.getPixelX(),
                         venue.getPixelY(), venue.getGroupId(), parentName,
                         venue.getParentRelation(), venue.getDescription());
             } else if(!childList.isEmpty()) {
                 String childNames[] = childList.toArray(new String[0]);
-                marker = new Building(venue.getName(), venue.getShortName(), venue.getPixelX(),
+                marker = new Building(venue.getDbId(), venue.getName(), venue.getShortName(), venue.getPixelX(),
                         venue.getPixelY(),venue.getGroupId(), childNames, venue.getDescription());
             } else {
-                marker = new Marker(venue.getName(), venue.getShortName(), venue.getPixelX(),
+                marker = new Marker(venue.getDbId(), venue.getName(), venue.getShortName(), venue.getPixelX(),
                         venue.getPixelY(), venue.getGroupId(), venue.getDescription());
             }
             data.put(venue.getName(), marker);

@@ -2,6 +2,9 @@ package com.mrane.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 
 public class Notice extends ExtendedSugarRecord<Notice> {
@@ -169,6 +172,17 @@ public class Notice extends ExtendedSugarRecord<Notice> {
 
     public void setVenueId(long venueId) {
         this.venueId = venueId;
+    }
+
+    public String getTitle() {
+        String title = "";
+        try {
+            JSONObject data = new JSONObject(this.dataJson);
+            title = data.getString("title");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return title;
     }
 
     public class Corner {

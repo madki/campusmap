@@ -1,13 +1,13 @@
 package com.mrane.data;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import android.graphics.Color;
 import android.graphics.PointF;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Marker {
-	private int id;
+	private long id;
 	private String name;
 	private String shortName;
 	private PointF point;
@@ -53,8 +53,9 @@ public class Marker {
 	private static final String PRINT_NAME = "Printer facility";
 	private static final String LABS_NAME = "Labs";
 
-	public Marker(String name, String shortName, float x, float y,
+	public Marker(long id, String name, String shortName, float x, float y,
 			int groupIndex, String description) {
+        this.id = id;
 		this.setPoint(new PointF(x, y));
 		this.groupIndex = groupIndex;
 		this.setName(name);
@@ -64,7 +65,7 @@ public class Marker {
 		this.setImageUri("");
 	}
 
-	public Marker(int id, String name, String shortName, float pixelX, float pixelY,
+	public Marker(long id, String name, String shortName, float pixelX, float pixelY,
 			int groupIndex, String description, int parentId, String parentRel,
 			int[] childIds, long lat, long lng) {
 		this.id = id;
@@ -183,7 +184,7 @@ public class Marker {
 		return result;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
