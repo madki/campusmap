@@ -2,7 +2,6 @@ package in.workarounds.instimap.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +25,16 @@ public class IndexFragment extends EventFragment implements AdapterView.OnItemCl
     IndexAdapter adapter;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        markers = getData();
+        adapter = new IndexAdapter(getActivity(), markers);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_index, container, false);
         final ExpandableStickyListHeadersListView expandableStickyList = (ExpandableStickyListHeadersListView) rootView.findViewById(R.id.list_index);
-        markers = getData();
-        adapter = new IndexAdapter(getActivity(), markers);
         expandableStickyList.setAdapter(adapter);
         for (int i = 0; i < Marker.NUMBER_OF_GROUPS+1; i++) {
             expandableStickyList.collapse(i);
@@ -46,21 +50,19 @@ public class IndexFragment extends EventFragment implements AdapterView.OnItemCl
     }
 
     public void onEventMainThread(StickyEvents.LocationLoadEvent event) {
-        List<Marker> newMarkerList = getSortedMarkers(event.markersHashMap);
+        List<Marker> newMarkerList = getSortedMarkers(event.locations.data);
         if(adapter!=null) {
             adapter.setMarkers(newMarkerList);
             adapter.notifyDataSetInvalidated();
         } else {
-            Log.d("IndexFragment", "adapter is null");
         }
     }
 
     private List<Marker> getData() {
         StickyEvents.LocationLoadEvent event = EventBus.getDefault().getStickyEvent(StickyEvents.LocationLoadEvent.class);
         if(event!=null) {
-            return getSortedMarkers(event.markersHashMap);
+            return getSortedMarkers(event.locations.data);
         } else {
-            Log.d("IndexFragment", "event is null");
             return new ArrayList<>();
         }
     }

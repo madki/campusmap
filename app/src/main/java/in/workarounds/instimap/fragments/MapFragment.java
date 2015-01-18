@@ -7,14 +7,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import in.designlabs.instimap.R;
 import in.workarounds.instimap.bus.EventFragment;
 import in.workarounds.instimap.bus.NormalEvents;
-import in.workarounds.instimap.helpers.BarViewHelper;
-import in.workarounds.instimap.helpers.CardSlideListener;
+import in.workarounds.instimap.helpers.mapfragment.BarViewHelper;
+import in.workarounds.instimap.helpers.mapfragment.CardSlideListener;
+import in.workarounds.instimap.helpers.mapfragment.CardViewHelper;
 import in.workarounds.instimap.views.SlidingUpPanelLayout;
 import in.workarounds.instimap.views.mapview.CampusMapView;
 
@@ -28,11 +27,7 @@ public class MapFragment extends EventFragment {
     }
 
     private void setUp(View rootView) {
-        View newSmallCard = rootView.findViewById(R.id.new_small_card);
-        in.workarounds.instimap.views.SlidingUpPanelLayout slidingLayout = (SlidingUpPanelLayout) rootView.findViewById(R.id.sliding_layout);
-        TextView placeNameTextView = (TextView) rootView.findViewById(R.id.place_name);
-        ImageView placeColor = (ImageView) rootView.findViewById(R.id.place_color);
-        TextView placeSubHeadTextView = (TextView) rootView.findViewById(R.id.place_sub_head);
+        SlidingUpPanelLayout slidingLayout = (SlidingUpPanelLayout) rootView.findViewById(R.id.sliding_layout);
 
         CardSlideListener cardSlideListener = new CardSlideListener(getActivity(), slidingLayout);
         slidingLayout.setPanelSlideListener(cardSlideListener);
@@ -43,6 +38,9 @@ public class MapFragment extends EventFragment {
 
         View barView = rootView.findViewById(R.id.bar_view);
         BarViewHelper barViewHelper = new BarViewHelper(getActivity(), barView);
+
+        View cardView = rootView.findViewById(R.id.card_view);
+        CardViewHelper cardViewHelper = new CardViewHelper(getActivity(), cardView, cardSlideListener);
     }
 
     private Runnable setAnchor(final SlidingUpPanelLayout slidingLayout) {

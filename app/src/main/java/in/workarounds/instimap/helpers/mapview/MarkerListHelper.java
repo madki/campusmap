@@ -54,7 +54,7 @@ public class MarkerListHelper {
     }
 
     public void onEventMainThread(StickyEvents.LocationLoadEvent event) {
-        markerList = new ArrayList<>(event.markersHashMap.values());
+        markerList = new ArrayList<>(event.locations.data.values());
     }
 
     public void onEventMainThread(StickyEvents.NoticeMarkersChangedEvent event) {
@@ -90,7 +90,7 @@ public class MarkerListHelper {
         StickyEvents.LocationLoadEvent event = eventBus.getStickyEvent(
                 StickyEvents.LocationLoadEvent.class);
         if(event!=null) {
-            markerList = new ArrayList<>(event.markersHashMap.values());
+            markerList = new ArrayList<>(event.locations.data.values());
         } else {
             markerList = new ArrayList<>();
         }

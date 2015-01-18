@@ -44,7 +44,7 @@ public class SearchFragment extends EventFragment implements AdapterView.OnItemC
         setHasOptionsMenu(true);
 
         ActionBar actionBar = getActionBar();
-        actionBar.setCustomView(R.layout.view_custom_actionbar);
+        actionBar.setCustomView(R.layout.layout_custom_actionbar);
         View actionBarView = actionBar.getCustomView();
 
         editText = (EditText) actionBarView.findViewById(R.id.search);
@@ -125,7 +125,7 @@ public class SearchFragment extends EventFragment implements AdapterView.OnItemC
     }
 
     public void onEventMainThread(StickyEvents.LocationLoadEvent event) {
-        List<Marker> newMarkerList = new ArrayList<>(event.markersHashMap.values());
+        List<Marker> newMarkerList = new ArrayList<>(event.locations.data.values());
         if(adapter!=null) {
             adapter.setMarkerLists(newMarkerList);
             adapter.notifyDataSetInvalidated();
@@ -137,7 +137,7 @@ public class SearchFragment extends EventFragment implements AdapterView.OnItemC
     private List<Marker> getMarkerList() {
         StickyEvents.LocationLoadEvent event = EventBus.getDefault().getStickyEvent(StickyEvents.LocationLoadEvent.class);
         if(event!=null) {
-            return new ArrayList<>(event.markersHashMap.values());
+            return new ArrayList<>(event.locations.data.values());
         } else {
             Log.d("SearchFragment", "event is null");
             return new ArrayList<>();

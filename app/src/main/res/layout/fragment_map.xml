@@ -35,6 +35,8 @@
     </RelativeLayout>
 
     <!-- SLIDING LAYOUT -->
-    <include layout="@layout/layout_card" />
+    <include
+        android:id="@+id/card_view"
+        layout="@layout/layout_card" />
 
 </in.workarounds.instimap.views.SlidingUpPanelLayout>

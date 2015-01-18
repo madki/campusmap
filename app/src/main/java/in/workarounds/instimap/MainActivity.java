@@ -2,12 +2,13 @@ package in.workarounds.instimap;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import java.util.HashMap;
 
@@ -16,11 +17,16 @@ import de.greenrobot.event.util.AsyncExecutor;
 import in.designlabs.instimap.R;
 import in.workarounds.instimap.bus.StickyEvents;
 import in.workarounds.instimap.fragments.NavigationDrawerFragment;
+import in.workarounds.instimap.helpers.BottomFragmentManager;
+import in.workarounds.instimap.helpers.SyncHelper;
+import in.workarounds.instimap.helpers.TopFragmentManager;
 import in.workarounds.instimap.models.Locations;
 import in.workarounds.instimap.models.Marker;
 
 
 public class MainActivity extends ActionBarActivity {
+    private TopFragmentManager topFragmentManager;
+    private BottomFragmentManager bottomFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,19 +35,61 @@ public class MainActivity extends ActionBarActivity {
         initialSetUp();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search_icon:
+                topFragmentManager.openSearchFragment();
+                return true;
+            case R.id.index_icon:
+                topFragmentManager.openIndexFragment();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(!topFragmentManager.closeTopFragments()) {
+            if(!removeCurrentMarker()) {
+                super.onBackPressed();
+            }
+        }
+    }
+
+    private boolean removeCurrentMarker() {
+        EventBus eventBus = EventBus.getDefault();
+        StickyEvents.CurrentMarkerEvent event = eventBus.getStickyEvent(
+                StickyEvents.CurrentMarkerEvent.class);
+        if(event != null) {
+            if(event.marker!=null) {
+                eventBus.postSticky(new StickyEvents.CurrentMarkerEvent(null));
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void initialSetUp() {
         setUpActionBar();
         setUpDrawer();
-        in.workarounds.instimap.helpers.SyncHandler.setUp(this);
+        setUpFragmentManagers();
+        SyncHelper.setUp(this);
         setUpEventSubscription();
         initLocations(this);
-        startSearchFragment();
+        startFragments();
     }
 
-    private void startSearchFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment mapFragment = new in.workarounds.instimap.fragments.MapFragment();
-        fragmentManager.beginTransaction().add(R.id.top_fragment, mapFragment).commit();
+    private void startFragments() {
+        bottomFragmentManager.openMapFragment();
     }
 
     private void setUpActionBar() {
@@ -57,6 +105,12 @@ public class MainActivity extends ActionBarActivity {
                 (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
+    private void setUpFragmentManagers() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        topFragmentManager = new TopFragmentManager(this, fragmentManager);
+        bottomFragmentManager = new BottomFragmentManager(this, fragmentManager);
+    }
+
     private void setUpEventSubscription() {
         EventBus eventBus = EventBus.getDefault();
         eventBus.registerSticky(this);
@@ -68,12 +122,12 @@ public class MainActivity extends ActionBarActivity {
             public void run() throws Exception {
                 Locations locations = Locations.getInstance(context);
                 HashMap<String, Marker> data = locations.data;
-                EventBus.getDefault().postSticky(new StickyEvents.LocationLoadEvent(data));
+                EventBus.getDefault().postSticky(new StickyEvents.LocationLoadEvent(locations));
             }
         });
     }
 
     public void onEvent(StickyEvents.CurrentMarkerEvent event) {
-        Log.d("MainActivity", "marker selected: " + event.marker.getName());
+        topFragmentManager.closeTopFragments();
     }
 }

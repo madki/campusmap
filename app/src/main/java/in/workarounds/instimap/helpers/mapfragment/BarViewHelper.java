@@ -1,9 +1,8 @@
-package in.workarounds.instimap.helpers;
+package in.workarounds.instimap.helpers.mapfragment;
 
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -19,6 +18,7 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.util.AsyncExecutor;
 import in.designlabs.instimap.R;
 import in.workarounds.instimap.bus.StickyEvents;
+import in.workarounds.instimap.helpers.SettingsManager;
 import in.workarounds.instimap.models.Locations;
 import in.workarounds.instimap.models.Marker;
 import in.workarounds.instimap.models.Notice;
@@ -36,6 +36,7 @@ public class BarViewHelper implements SharedPreferences.OnSharedPreferenceChange
     }
 
     private void setUp(){
+        setEventBus();
         settingsManager = SettingsManager.getInstance(context);
         SharedPreferences prefs = settingsManager.getSharedPrefs();
         prefs.registerOnSharedPreferenceChangeListener(this);
@@ -61,6 +62,33 @@ public class BarViewHelper implements SharedPreferences.OnSharedPreferenceChange
         setBarViewVisibility();
     }
 
+    private void setEventBus() {
+        EventBus eventBus = EventBus.getDefault();
+        eventBus.register(this);
+    }
+
+    public void onEventMainThread(StickyEvents.CurrentMarkerEvent event) {
+        if(event != null) {
+            barView.setVisibility(View.GONE);
+        } else {
+            setBarViewVisibility();
+        }
+    }
+
+    public void onEventMainThread(StickyEvents.LocationLoadEvent event) {
+        setDate();
+    }
+
+    private Locations getLocations() {
+        StickyEvents.LocationLoadEvent event = EventBus.getDefault().getStickyEvent(
+                StickyEvents.LocationLoadEvent.class);
+        if(event != null) {
+            return event.locations;
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         String eventsKey = context.getResources().getString(R.string.setting_events_key);
@@ -71,10 +99,8 @@ public class BarViewHelper implements SharedPreferences.OnSharedPreferenceChange
 
     private void setBarViewVisibility() {
         if(settingsManager.isInEventsMode()) {
-            Log.d("BarViewHelper", "is in events mode");
             barView.setVisibility(View.VISIBLE);
         } else {
-            Log.d("BarViewHelper", "is not in events mode");
             barView.setVisibility(View.GONE);
         }
     }
@@ -120,35 +146,36 @@ public class BarViewHelper implements SharedPreferences.OnSharedPreferenceChange
         });
     }
 
-    private static ArrayList<Marker> getVenueMarkersList(Context context, Date date){
+    private ArrayList<Marker> getVenueMarkersList(Context context, Date date){
         ArrayList<Marker> result = new ArrayList<>();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        Date startDate = calendar.getTime();
+        Locations locations = getLocations();
+        if(locations != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            Date startDate = calendar.getTime();
 
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-        Date endDate = calendar.getTime();
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            Date endDate = calendar.getTime();
 
-        List<Notice> notices = Notice.find(Notice.class, "start_time BETWEEN ? AND ?", Long.toString(startDate.getTime()), Long.toString(endDate.getTime()));
-        ArrayList<Long> venueIds = new ArrayList<>();
-        for(Notice n: notices){
-            if(venueIds.indexOf(n.getVenueId()) == -1) {
-                if(n.getVenueId() != 0) {
-                    venueIds.add(n.getVenueId());
+            List<Notice> notices = Notice.find(Notice.class, "start_time BETWEEN ? AND ?", Long.toString(startDate.getTime()), Long.toString(endDate.getTime()));
+            ArrayList<Long> venueIds = new ArrayList<>();
+            for (Notice n : notices) {
+                if (venueIds.indexOf(n.getVenueId()) == -1) {
+                    if (n.getVenueId() != 0) {
+                        venueIds.add(n.getVenueId());
+                    }
                 }
             }
-        }
 
-        Locations locations = Locations.getInstance(context);
-        for(Long venueId: venueIds){
-            Marker marker = locations.getMarkerById(venueId);
-            result.add(marker);
+            for (Long venueId : venueIds) {
+                Marker marker = locations.getMarkerById(venueId);
+                result.add(marker);
+            }
         }
-
         return result;
     }
 }

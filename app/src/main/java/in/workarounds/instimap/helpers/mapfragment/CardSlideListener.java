@@ -1,4 +1,4 @@
-package in.workarounds.instimap.helpers;
+package in.workarounds.instimap.helpers.mapfragment;
 
 import android.content.Context;
 import android.view.View;

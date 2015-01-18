@@ -6,7 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
 
-public class SyncHandler {
+public class SyncHelper {
 
     public static final long SECONDS_PER_MINUTE = 60L;
     public static final long SYNC_INTERVAL_IN_MINUTES = 24*60L;
@@ -18,7 +18,7 @@ public class SyncHandler {
     public static final String ACCOUNT = "dummyaccount";
     private static Account mAccount = null;
 
-    private SyncHandler(Context context) {
+    private SyncHelper(Context context) {
 
     }
 

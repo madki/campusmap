@@ -1,11 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dragView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#eeeeee"
     android:clickable="true"
     android:focusable="false"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/new_small_card"
@@ -41,7 +42,7 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/lock_all_off" />
 
-            <TextView
+            <in.workarounds.instimap.views.TypeFacedTextView
                 android:id="@+id/place_name"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -49,27 +50,24 @@
                 android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@id/add_marker_icon"
                 android:ellipsize="end"
-                android:fontFamily="sans_serif"
+                custom:typeFace="bold"
                 android:maxLines="1"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
                 android:textSize="@dimen/place_name_text_size" >
-            </TextView>
+            </in.workarounds.instimap.views.TypeFacedTextView>
 
-            <TextView
+            <in.workarounds.instimap.views.SubHeadingView
                 android:id="@+id/place_sub_head"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/place_name"
                 android:layout_toLeftOf="@id/add_marker_icon"
-                android:fontFamily="sans_serif_light"
                 android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:text="@string/location_search"
-                android:textColor="@color/gray"
-                android:textSize="@dimen/place_sub_head_text_size" />
+                android:paddingRight="8dp" />
+
         </RelativeLayout>
     </LinearLayout>
 

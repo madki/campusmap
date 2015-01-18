@@ -202,7 +202,11 @@ public class Marker {
 	}
 
 	public String getShortName() {
-		return shortName;
+        if(!shortName.equals("0")) {
+            return shortName;
+        } else {
+            return getName();
+        }
 	}
 
 	public void setShortName(String shortName) {

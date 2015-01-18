@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
+
+    <in.workarounds.instimap.views.TypeFacedTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        custom:typeFace="regular"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/place_sub_head_text_size"
+        />
+
+    <in.workarounds.instimap.views.TypeFacedTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        custom:typeFace="regular"
+        android:textColor="@color/link_blue"
+        android:background="@drawable/link_selector"
+        android:textSize="@dimen/place_sub_head_text_size"
+        />
+
+</merge> 

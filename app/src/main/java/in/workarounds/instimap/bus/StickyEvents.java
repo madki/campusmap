@@ -1,25 +1,25 @@
 package in.workarounds.instimap.bus;
 
-import java.util.HashMap;
 import java.util.List;
 
+import in.workarounds.instimap.models.Locations;
 import in.workarounds.instimap.models.Marker;
 
 public class StickyEvents {
 
     public static class CurrentMarkerEvent {
-        public in.workarounds.instimap.models.Marker marker;
+        public Marker marker;
 
-        public CurrentMarkerEvent(in.workarounds.instimap.models.Marker m) {
+        public CurrentMarkerEvent(Marker m) {
             this.marker = m;
         }
     }
 
     public static class LocationLoadEvent {
-        public HashMap<String, in.workarounds.instimap.models.Marker> markersHashMap;
+        public Locations locations;
 
-        public LocationLoadEvent(HashMap<String, in.workarounds.instimap.models.Marker> markersHashMap) {
-            this.markersHashMap = markersHashMap;
+        public LocationLoadEvent(Locations locations) {
+            this.locations = locations;
         }
     }
 
@@ -30,4 +30,5 @@ public class StickyEvents {
             this.noticeMarkerList = noticeMarkerList;
         }
     }
+
 }

@@ -74,7 +74,7 @@ public class CampusMapView extends SubsamplingScaleImageView {
 
         StickyEvents.LocationLoadEvent event = eventBus.getStickyEvent(StickyEvents.LocationLoadEvent.class);
         if(event!=null) {
-            data = event.markersHashMap;
+            data = event.locations.data;
         } else {
             data = new HashMap<>();
         }
@@ -85,7 +85,7 @@ public class CampusMapView extends SubsamplingScaleImageView {
     }
 
     public void onEventMainThread(StickyEvents.LocationLoadEvent event) {
-        this.data = event.markersHashMap;
+        this.data = event.locations.data;
     }
 
     @Override

@@ -32,14 +32,14 @@
             android:layout_height="match_parent">
 
             <RelativeLayout
-                android:id="@+id/top_fragment"
+                android:id="@+id/bottom_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/bottom_fragment"
+                android:id="@+id/top_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
