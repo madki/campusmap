@@ -61,7 +61,7 @@ public class IndexFragment extends EventFragment implements AdapterView.OnItemCl
             return getSortedMarkers(event.markersHashMap);
         } else {
             Log.d("IndexFragment", "event is null");
-            return new ArrayList<in.workarounds.instimap.models.Marker>();
+            return new ArrayList<>();
         }
     }
 

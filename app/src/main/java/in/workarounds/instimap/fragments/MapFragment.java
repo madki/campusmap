@@ -13,6 +13,7 @@ import android.widget.TextView;
 import in.designlabs.instimap.R;
 import in.workarounds.instimap.bus.EventFragment;
 import in.workarounds.instimap.bus.NormalEvents;
+import in.workarounds.instimap.helpers.BarViewHelper;
 import in.workarounds.instimap.helpers.CardSlideListener;
 import in.workarounds.instimap.views.SlidingUpPanelLayout;
 import in.workarounds.instimap.views.mapview.CampusMapView;
@@ -39,6 +40,9 @@ public class MapFragment extends EventFragment {
 
         CampusMapView campusMapView = (CampusMapView) rootView.findViewById(R.id.campusMapView);
         campusMapView.setImageAsset("map.jpg");
+
+        View barView = rootView.findViewById(R.id.bar_view);
+        BarViewHelper barViewHelper = new BarViewHelper(getActivity(), barView);
     }
 
     private Runnable setAnchor(final SlidingUpPanelLayout slidingLayout) {

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import in.workarounds.instimap.parser.CustomGson;
+
 public class Locations {
 	public HashMap<String, Marker> data = new HashMap<String, in.workarounds.instimap.models.Marker>();
     private Context context;
@@ -20,21 +22,21 @@ public class Locations {
 
     private Locations(Context context) {
         this.context = context;
-        List<in.workarounds.instimap.models.Venue> venues = in.workarounds.instimap.models.Venue.listAll(in.workarounds.instimap.models.Venue.class);
+        List<Venue> venues = Venue.listAll(Venue.class);
         if(venues.isEmpty()) {
             venues = this.populateFromJson();
         }
 
-        for (in.workarounds.instimap.models.Venue venue: venues) {
+        for (Venue venue: venues) {
             String parentName = null;
-            List<String> childList = new ArrayList<String>();
+            List<String> childList = new ArrayList<>();
             if(venue.getParent() != 0) {
-                List<in.workarounds.instimap.models.Venue> parents = in.workarounds.instimap.models.Venue.find(in.workarounds.instimap.models.Venue.class, "db_id=?", Long.toString(venue.getParent()));
+                List<Venue> parents = Venue.find(Venue.class, "db_id=?", Long.toString(venue.getParent()));
                 if(!parents.isEmpty()) {
                     parentName = parents.get(0).getName();
                 }
             } else {
-                List<in.workarounds.instimap.models.Venue> children = Venue.find(Venue.class, "parent=?", Long.toString(venue.getDbId()));
+                List<Venue> children = Venue.find(Venue.class, "parent=?", Long.toString(venue.getDbId()));
                 if(!children.isEmpty()) {
                     for (Venue child: children) {
                         childList.add(child.getName());
@@ -44,15 +46,15 @@ public class Locations {
 
             Marker marker = null;
             if(parentName != null) {
-                marker = new in.workarounds.instimap.models.Room(venue.getDbId(), venue.getName(), venue.getShortName(), venue.getPixelX(),
+                marker = new Room(venue.getDbId(), venue.getName(), venue.getShortName(), venue.getPixelX(),
                         venue.getPixelY(), venue.getGroupId(), parentName,
                         venue.getParentRelation(), venue.getDescription());
             } else if(!childList.isEmpty()) {
                 String childNames[] = childList.toArray(new String[0]);
-                marker = new in.workarounds.instimap.models.Building(venue.getDbId(), venue.getName(), venue.getShortName(), venue.getPixelX(),
+                marker = new Building(venue.getDbId(), venue.getName(), venue.getShortName(), venue.getPixelX(),
                         venue.getPixelY(),venue.getGroupId(), childNames, venue.getDescription());
             } else {
-                marker = new in.workarounds.instimap.models.Marker(venue.getDbId(), venue.getName(), venue.getShortName(), venue.getPixelX(),
+                marker = new Marker(venue.getDbId(), venue.getName(), venue.getShortName(), venue.getPixelX(),
                         venue.getPixelY(), venue.getGroupId(), venue.getDescription());
             }
             data.put(venue.getName(), marker);
@@ -66,8 +68,8 @@ public class Locations {
         return mLocations;
     }
 
-    public in.workarounds.instimap.models.Marker getMarkerById(Long id){
-        List<in.workarounds.instimap.models.Venue> venues = in.workarounds.instimap.models.Venue.find(in.workarounds.instimap.models.Venue.class, "db_id = ?", id.toString());
+    public Marker getMarkerById(Long id){
+        List<Venue> venues = Venue.find(Venue.class, "db_id = ?", id.toString());
         if(!venues.isEmpty()){
             String name = venues.get(0).getName();
             return data.get(name);
@@ -75,14 +77,14 @@ public class Locations {
         return null;
     }
 
-    private List<in.workarounds.instimap.models.Venue> populateFromJson() {
+    private List<Venue> populateFromJson() {
         String venueJson = this.readFromAssets();
-        in.workarounds.instimap.parser.CustomGson customGson = new in.workarounds.instimap.parser.CustomGson();
+        in.workarounds.instimap.parser.CustomGson customGson = new CustomGson();
         Gson gson = customGson.getGson();
-        Type listType = new TypeToken<ArrayList<in.workarounds.instimap.models.Venue>>() {}.getType();
-        List<in.workarounds.instimap.models.Venue> venues = gson.fromJson(venueJson, listType);
-        for (in.workarounds.instimap.models.Venue v: venues) {
-            v.saveOrUpdate(in.workarounds.instimap.models.Venue.class, v.getDbId());
+        Type listType = new TypeToken<ArrayList<Venue>>() {}.getType();
+        List<Venue> venues = gson.fromJson(venueJson, listType);
+        for (Venue v: venues) {
+            v.saveOrUpdate(Venue.class, v.getDbId());
         }
 
         return venues;

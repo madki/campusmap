@@ -1,6 +1,9 @@
 package in.workarounds.instimap.bus;
 
 import java.util.HashMap;
+import java.util.List;
+
+import in.workarounds.instimap.models.Marker;
 
 public class StickyEvents {
 
@@ -17,6 +20,14 @@ public class StickyEvents {
 
         public LocationLoadEvent(HashMap<String, in.workarounds.instimap.models.Marker> markersHashMap) {
             this.markersHashMap = markersHashMap;
+        }
+    }
+
+    public static class NoticeMarkersChangedEvent {
+        public List<Marker> noticeMarkerList;
+
+        public NoticeMarkersChangedEvent(List<Marker> noticeMarkerList) {
+            this.noticeMarkerList = noticeMarkerList;
         }
     }
 }

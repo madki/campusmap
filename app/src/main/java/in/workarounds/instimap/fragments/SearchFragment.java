@@ -125,7 +125,7 @@ public class SearchFragment extends EventFragment implements AdapterView.OnItemC
     }
 
     public void onEventMainThread(StickyEvents.LocationLoadEvent event) {
-        List<Marker> newMarkerList = new ArrayList<in.workarounds.instimap.models.Marker>(event.markersHashMap.values());
+        List<Marker> newMarkerList = new ArrayList<>(event.markersHashMap.values());
         if(adapter!=null) {
             adapter.setMarkerLists(newMarkerList);
             adapter.notifyDataSetInvalidated();

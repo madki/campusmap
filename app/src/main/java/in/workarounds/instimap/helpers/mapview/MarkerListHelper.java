@@ -1,7 +1,5 @@
 package in.workarounds.instimap.helpers.mapview;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,14 +25,8 @@ public class MarkerListHelper {
     private void setUp() {
         EventBus eventBus = EventBus.getDefault();
         eventBus.registerSticky(this);
-        StickyEvents.LocationLoadEvent event = eventBus.getStickyEvent(StickyEvents.LocationLoadEvent.class);
-        if(event!=null) {
-            Log.d("MarkerListHelper", "Setting markerList from event");
-            markerList = new ArrayList<>(event.markersHashMap.values());
-        } else {
-            Log.d("MarkerListHelper", "Setting markerList as empty");
-            markerList = new ArrayList<>();
-        }
+        setMarkerList();
+        setNoticeMarkerList();
     }
 
     public List<Marker> getMarkerList() {
@@ -54,13 +46,35 @@ public class MarkerListHelper {
     }
 
     public void onEventMainThread(StickyEvents.LocationLoadEvent event) {
-        Log.d("MarkerListHelper", "Setting markerList after listening to event");
         markerList = new ArrayList<>(event.markersHashMap.values());
+    }
+
+    public void onEventMainThread(StickyEvents.NoticeMarkersChangedEvent event) {
+        noticeMarkerList = event.noticeMarkerList;
     }
 
     public boolean isAddedMarker(Marker marker) {
         int markerType = getMarkerType(marker);
         return  isAddedMarker(markerType);
+    }
+
+
+    private void setMarkerList() {
+        StickyEvents.LocationLoadEvent event = EventBus.getDefault().getStickyEvent(
+                StickyEvents.LocationLoadEvent.class);
+        if(event!=null) {
+            markerList = new ArrayList<>(event.markersHashMap.values());
+        } else {
+            markerList = new ArrayList<>();
+        }
+    }
+
+    private void setNoticeMarkerList() {
+        StickyEvents.NoticeMarkersChangedEvent event = EventBus.getDefault().getStickyEvent(
+                StickyEvents.NoticeMarkersChangedEvent.class);
+        if(event != null) {
+            this.noticeMarkerList = event.noticeMarkerList;
+        }
     }
 
     public static boolean isAddedMarker(int markerType) {
