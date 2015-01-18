@@ -1,10 +1,15 @@
 package in.workarounds.instimap.helpers.mapfragment;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import in.designlabs.instimap.R;
@@ -34,6 +39,7 @@ public class CardViewHelper {
         SubHeadingView placeSubHeading;
         ImageView placeColor;
         ImageButton addMarkerIcon;
+        View placeGroupColor;
     }
 
     private void setUp() {
@@ -58,6 +64,14 @@ public class CardViewHelper {
         cardViewHolder.placeSubHeading = (SubHeadingView) cardView.findViewById(R.id.place_sub_head);
         cardViewHolder.placeColor = (ImageView) cardView.findViewById(R.id.place_color);
         cardViewHolder.addMarkerIcon = (ImageButton) cardView.findViewById(R.id.add_marker_icon);
+        cardViewHolder.placeGroupColor = cardView.findViewById(R.id.place_group_color);
+
+        cardViewHolder.addMarkerIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addMarkerToAddedMarkers();
+            }
+        });
     }
 
     public void onEventMainThread(StickyEvents.CurrentMarkerEvent event) {
@@ -65,10 +79,35 @@ public class CardViewHelper {
         showResultMarker();
     }
 
+    public void onEventMainThread(StickyEvents.AddedMarkersChangedEvent event) {
+        setAddMarkerIcon();
+    }
+
+    private void addMarkerToAddedMarkers() {
+        EventBus eventBus = EventBus.getDefault();
+        StickyEvents.AddedMarkersChangedEvent event = eventBus.getStickyEvent(
+                StickyEvents.AddedMarkersChangedEvent.class);
+        List<Marker> addedMarkers;
+        if(event==null) {
+            addedMarkers = new ArrayList<>();
+            addedMarkers.add(resultMarker);
+        } else {
+            addedMarkers = event.addedMarkers;
+            if(addedMarkers.contains(resultMarker)) {
+                addedMarkers.remove(resultMarker);
+            } else {
+                addedMarkers.add(resultMarker);
+            }
+        }
+        eventBus.postSticky(new StickyEvents.AddedMarkersChangedEvent(addedMarkers));
+    }
+
     private void showResultMarker() {
         if(resultMarker != null) {
             setPlaceName();
             setPlaceSubHeading();
+            setAddMarkerIcon();
+            setMarkerColors();
             cardSlideListener.showCard();
         } else {
             cardSlideListener.dismissCard();
@@ -115,4 +154,44 @@ public class CardViewHelper {
         Marker parent = locations.data.get(parentName);
         return parent;
     }
+
+    private boolean isAddedMarker(Marker marker) {
+        EventBus eventBus = EventBus.getDefault();
+        StickyEvents.AddedMarkersChangedEvent event = eventBus.getStickyEvent(
+                StickyEvents.AddedMarkersChangedEvent.class);
+        if(event!=null) {
+            return event.addedMarkers.contains(marker);
+        }
+        return false;
+    }
+
+    private Drawable getLockIcon(Marker marker) {
+        int color = marker.getColor();
+        int drawableId = R.drawable.lock_all_off;
+        if (isAddedMarker(marker)) {
+            if (color == Marker.COLOR_BLUE)
+                drawableId = R.drawable.lock_blue_on;
+            else if (color == Marker.COLOR_YELLOW)
+                drawableId = R.drawable.lock_on_yellow;
+            else if (color == Marker.COLOR_GREEN)
+                drawableId = R.drawable.lock_green_on;
+            else if (color == Marker.COLOR_GRAY)
+                drawableId = R.drawable.lock_gray_on;
+        }
+        Drawable lock = context.getResources().getDrawable(drawableId);
+        return lock;
+    }
+
+    private void setMarkerColors() {
+        cardViewHolder.placeColor.setImageDrawable(new ColorDrawable(resultMarker.getColor()));
+        cardViewHolder.placeGroupColor.setBackgroundColor(
+                resultMarker.getColor());
+    }
+
+    private void setAddMarkerIcon() {
+        cardViewHolder.addMarkerIcon.setImageDrawable(getLockIcon(resultMarker));
+    }
+
+
+
 }

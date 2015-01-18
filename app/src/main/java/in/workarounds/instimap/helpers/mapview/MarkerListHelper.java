@@ -13,6 +13,7 @@ public class MarkerListHelper {
     public static final int SPECIAL_MARKER = 2;
     public static final int NOTICE_MARKER = 3;
     public static final int RESULT_MARKER = 4;
+    public static final int ADDED_RESULT_MARKER = 5;
     private Marker resultMarker;
     private List<Marker> markerList;
     private List<Marker> addedMarkerList = new ArrayList<>();
@@ -37,6 +38,9 @@ public class MarkerListHelper {
 
     public int getMarkerType(Marker marker) {
         if(addedMarkerList.contains(marker)) {
+            if(isResultMarker(marker)) {
+                return ADDED_RESULT_MARKER;
+            }
             return ADDED_MARKER;
         } else if(specialMarkerList.contains(marker)) {
             return SPECIAL_MARKER;
@@ -61,6 +65,10 @@ public class MarkerListHelper {
         noticeMarkerList = event.noticeMarkerList;
     }
 
+    public void onEventMainThread(StickyEvents.AddedMarkersChangedEvent event) {
+        addedMarkerList = event.addedMarkers;
+    }
+
     public boolean isAddedMarker(Marker marker) {
         int markerType = getMarkerType(marker);
         return  isAddedMarker(markerType);
@@ -78,7 +86,8 @@ public class MarkerListHelper {
     }
 
     private void setResultMarker(EventBus eventBus) {
-        StickyEvents.CurrentMarkerEvent event = eventBus.getStickyEvent(StickyEvents.CurrentMarkerEvent.class);
+        StickyEvents.CurrentMarkerEvent event = eventBus.getStickyEvent(
+                StickyEvents.CurrentMarkerEvent.class);
         if(event!=null) {
             resultMarker = event.marker;
         } else {
@@ -105,7 +114,7 @@ public class MarkerListHelper {
     }
 
     public static boolean isAddedMarker(int markerType) {
-        return markerType == ADDED_MARKER;
+        return (markerType == ADDED_MARKER) || (markerType == ADDED_RESULT_MARKER);
     }
 
     public static boolean isSpecialMarker(int markerType) {
@@ -117,7 +126,11 @@ public class MarkerListHelper {
     }
 
     public static boolean isResultMarker(int markerType) {
-        return markerType == RESULT_MARKER;
+        return (markerType == RESULT_MARKER) || (markerType == ADDED_RESULT_MARKER);
+    }
+
+    public static boolean isAddedResultMarker(int markerType) {
+        return markerType == ADDED_RESULT_MARKER;
     }
 
 }

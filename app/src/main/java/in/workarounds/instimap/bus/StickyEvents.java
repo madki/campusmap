@@ -31,4 +31,12 @@ public class StickyEvents {
         }
     }
 
+    public static class AddedMarkersChangedEvent {
+        public List<Marker> addedMarkers;
+
+        public AddedMarkersChangedEvent(List<Marker> addedMarkers) {
+            this.addedMarkers = addedMarkers;
+        }
+    }
+
 }

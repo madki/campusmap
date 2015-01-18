@@ -88,6 +88,10 @@ public class CampusMapView extends SubsamplingScaleImageView {
         this.data = event.locations.data;
     }
 
+    public void onEventMainThread(Object event) {
+        invalidate();
+    }
+
     @Override
     protected void onImageReady() {
         if (isFirstLoad) {
@@ -344,7 +348,7 @@ public class CampusMapView extends SubsamplingScaleImageView {
         Marker marker = markerListHelper.getResultMarker();
         if (marker != null) {
             PointF point = marker.getPoint();
-            int markerType = MarkerListHelper.RESULT_MARKER;
+            int markerType = markerListHelper.getMarkerType(marker);
             if (isInView(point)) {
                 Bitmap pin = bitmapHelper.drawMarkerBitmap(canvas,
                         marker, markerType, sourceToViewCoord(point));
