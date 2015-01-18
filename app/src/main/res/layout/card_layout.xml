@@ -106,9 +106,9 @@
                     android:orientation="vertical" >
                 </LinearLayout>
 
-                <fragment class="com.mrane.navigation.VenueEventsFragment"
-                    android:id="@+id/venue_events_fragment"
-                    android:layout_width="match_parent" android:layout_height="match_parent" />
+                <!--<fragment class="com.mrane.navigation.VenueEventsFragment"-->
+                    <!--android:id="@+id/venue_events_fragment"-->
+                    <!--android:layout_width="match_parent" android:layout_height="match_parent" />-->
 
             </RelativeLayout>
         </com.mrane.navigation.EndDetectScrollView>
