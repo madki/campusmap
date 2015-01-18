@@ -13,6 +13,7 @@ public class MarkerListHelper {
     public static final int SPECIAL_MARKER = 2;
     public static final int NOTICE_MARKER = 3;
     public static final int RESULT_MARKER = 4;
+    private Marker resultMarker;
     private List<Marker> markerList;
     private List<Marker> addedMarkerList = new ArrayList<>();
     private List<Marker> specialMarkerList = new ArrayList<>();
@@ -25,8 +26,9 @@ public class MarkerListHelper {
     private void setUp() {
         EventBus eventBus = EventBus.getDefault();
         eventBus.registerSticky(this);
-        setMarkerList();
-        setNoticeMarkerList();
+        setResultMarker(eventBus);
+        setMarkerList(eventBus);
+        setNoticeMarkerList(eventBus);
     }
 
     public List<Marker> getMarkerList() {
@@ -40,9 +42,15 @@ public class MarkerListHelper {
             return SPECIAL_MARKER;
         } else if(noticeMarkerList.contains(marker)) {
             return NOTICE_MARKER;
+        } else if(isResultMarker(marker)) {
+            return RESULT_MARKER;
         } else {
             return NORMAL_MARKER;
         }
+    }
+
+    public void onEventMainThread(StickyEvents.CurrentMarkerEvent event) {
+        resultMarker = event.marker;
     }
 
     public void onEventMainThread(StickyEvents.LocationLoadEvent event) {
@@ -58,9 +66,28 @@ public class MarkerListHelper {
         return  isAddedMarker(markerType);
     }
 
+    public Marker getResultMarker() {
+        return resultMarker;
+    }
 
-    private void setMarkerList() {
-        StickyEvents.LocationLoadEvent event = EventBus.getDefault().getStickyEvent(
+    public boolean isResultMarker(Marker marker) {
+        if(resultMarker == null) {
+            return false;
+        }
+        return resultMarker == marker;
+    }
+
+    private void setResultMarker(EventBus eventBus) {
+        StickyEvents.CurrentMarkerEvent event = eventBus.getStickyEvent(StickyEvents.CurrentMarkerEvent.class);
+        if(event!=null) {
+            resultMarker = event.marker;
+        } else {
+            resultMarker = null;
+        }
+    }
+
+    private void setMarkerList(EventBus eventBus) {
+        StickyEvents.LocationLoadEvent event = eventBus.getStickyEvent(
                 StickyEvents.LocationLoadEvent.class);
         if(event!=null) {
             markerList = new ArrayList<>(event.markersHashMap.values());
@@ -69,8 +96,8 @@ public class MarkerListHelper {
         }
     }
 
-    private void setNoticeMarkerList() {
-        StickyEvents.NoticeMarkersChangedEvent event = EventBus.getDefault().getStickyEvent(
+    private void setNoticeMarkerList(EventBus eventBus) {
+        StickyEvents.NoticeMarkersChangedEvent event = eventBus.getStickyEvent(
                 StickyEvents.NoticeMarkersChangedEvent.class);
         if(event != null) {
             this.noticeMarkerList = event.noticeMarkerList;
@@ -87,6 +114,10 @@ public class MarkerListHelper {
 
     public static boolean isNoticeMarker(int markerType) {
         return markerType == NOTICE_MARKER;
+    }
+
+    public static boolean isResultMarker(int markerType) {
+        return markerType == RESULT_MARKER;
     }
 
 }

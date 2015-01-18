@@ -9,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -63,6 +62,8 @@ public class CampusMapView extends SubsamplingScaleImageView {
         textHelper = new TextHelper(context, displayMetrics);
         settingsManager = SettingsManager.getInstance(context);
         isFirstLoad = true;
+
+        showResultMarker(markerListHelper.getResultMarker());
         setUpEventBus();
         setGestureDetector(context);
     }
@@ -80,7 +81,7 @@ public class CampusMapView extends SubsamplingScaleImageView {
     }
 
     public void onEventMainThread(StickyEvents.CurrentMarkerEvent event) {
-        Log.d("CampusMapView", "Current marker: " + event.marker.getName());
+        showResultMarker(event.marker);
     }
 
     public void onEventMainThread(StickyEvents.LocationLoadEvent event) {
@@ -114,7 +115,7 @@ public class CampusMapView extends SubsamplingScaleImageView {
                             e.getY());
                     Marker marker = getNearestMarker(sCoord);
                     if (isMarkerInTouchRegion(marker, sCoord)) {
-
+                        EventBus.getDefault().postSticky(new StickyEvents.CurrentMarkerEvent(marker));
                     }
                 } else {
 
@@ -222,8 +223,8 @@ public class CampusMapView extends SubsamplingScaleImageView {
         if (marker instanceof Building) {
             String[] childKeys = ((Building) marker).children;
             for (String childKey : childKeys) {
-                in.workarounds.instimap.models.Marker child = data.get(childKey);
-                if (markerListHelper.isAddedMarker(child) || bitmapHelper.isResultMarker(child)) {
+                Marker child = data.get(childKey);
+                if (markerListHelper.isAddedMarker(child) || markerListHelper.isResultMarker(child)) {
                     result = false;
                     break;
                 }
@@ -330,26 +331,51 @@ public class CampusMapView extends SubsamplingScaleImageView {
             int markerType = markerListHelper.getMarkerType(marker);
             if (isInView(point)) {
                 if (isShowPinScale(marker)
-                        && !(bitmapHelper.isResultMarker(marker))
+                        && !(markerListHelper.isResultMarker(marker))
                         && shouldShowUp(marker)) {
                     Bitmap pin = bitmapHelper.drawMarkerBitmap(canvas,
-                        marker, markerType, point);
-                    textHelper.drawText(canvas, marker, markerType, point, pin);
+                        marker, markerType, sourceToViewCoord(point));
+                    textHelper.drawText(canvas, marker,
+                            markerType, sourceToViewCoord(point), pin);
                 }
             }
         }
 
-        in.workarounds.instimap.models.Marker marker = bitmapHelper.getResultMarker();
+        Marker marker = markerListHelper.getResultMarker();
         if (marker != null) {
             PointF point = marker.getPoint();
             int markerType = MarkerListHelper.RESULT_MARKER;
             if (isInView(point)) {
                 Bitmap pin = bitmapHelper.drawMarkerBitmap(canvas,
-                        marker, markerType, point);
-                textHelper.drawText(canvas, marker, markerType, point, pin);
+                        marker, markerType, sourceToViewCoord(point));
+                textHelper.drawText(canvas, marker,
+                        markerType, sourceToViewCoord(point), pin);
             }
         }
 
+    }
+
+    public void showResultMarker(Marker resultMarker) {
+        if (resultMarker != null) {
+            boolean noDelay = false;
+            if (isInView(resultMarker.getPoint()))
+                noDelay = true;
+            AnimationBuilder anim = animateScaleAndCenter(getShowTextScale(),
+                    resultMarker.getPoint());
+            anim.withDuration(750).start();
+            // TODO change sound index
+            setMarkerAnimation(noDelay, 1);
+        }
+    }
+
+    private float getShowTextScale() {
+        float xDpi = displayMetrics.xdpi;
+        float scale = (RATIO_SHOW_PIN_TEXT * xDpi * 2 / density + 20)
+                / getSWidth();
+        if (scale > getMaxScale()) {
+            scale = 0.7f * getMaxScale();
+        }
+        return scale;
     }
 
 }

@@ -9,15 +9,12 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.DisplayMetrics;
 
-import de.greenrobot.event.EventBus;
 import in.designlabs.instimap.R;
-import in.workarounds.instimap.bus.StickyEvents;
 import in.workarounds.instimap.models.Marker;
 import in.workarounds.instimap.views.mapview.CampusMapView;
 
 public class BitmapHelper {
     private Paint paint;
-    private Marker resultMarker;
     private Bitmap bluePointer;
     private Bitmap yellowPointer;
     private Bitmap greenPointer;
@@ -38,21 +35,8 @@ public class BitmapHelper {
     }
 
     private void setUp() {
-        EventBus eventBus = EventBus.getDefault();
-        eventBus.registerSticky(this);
-        StickyEvents.CurrentMarkerEvent event = eventBus.getStickyEvent(StickyEvents.CurrentMarkerEvent.class);
-        if(event!=null) {
-            resultMarker = event.marker;
-        } else {
-            resultMarker = null;
-        }
-
         paint = new Paint();
         paint.setAntiAlias(true);
-    }
-
-    public void onEventMainThread(StickyEvents.CurrentMarkerEvent event) {
-        resultMarker = event.marker;
     }
 
     public Bitmap drawMarkerBitmap(Canvas canvas, Marker marker, int markerType, PointF point) {
@@ -124,14 +108,14 @@ public class BitmapHelper {
                 markerBitmap = grayLockedMarker;
         }
 
-        if (CampusMapView.highlightedMarkerScale != 1.0f && isResultMarker(marker)) {
+        if (CampusMapView.highlightedMarkerScale != 1.0f && MarkerListHelper.isResultMarker(markerType)) {
             float w = markerBitmap.getWidth() * CampusMapView.highlightedMarkerScale;
             float h = markerBitmap.getHeight() * CampusMapView.highlightedMarkerScale;
             markerBitmap = Bitmap.createScaledBitmap(markerBitmap, (int) w,
                     (int) h, true);
         }
 
-        if (isResultMarker(marker)) {
+        if (MarkerListHelper.isResultMarker(markerType)) {
             float w = markerBitmap.getWidth() * 1.2f;
             float h = markerBitmap.getHeight() * 1.2f;
             markerBitmap = Bitmap.createScaledBitmap(markerBitmap, (int) w,
@@ -139,17 +123,6 @@ public class BitmapHelper {
         }
 
         return markerBitmap;
-    }
-
-    public Marker getResultMarker() {
-        return resultMarker;
-    }
-
-    public boolean isResultMarker(Marker marker) {
-        if(resultMarker == null) {
-            return false;
-        }
-        return resultMarker == marker;
     }
 
     private void initMarkers(Context context, DisplayMetrics displayMetrics) {
