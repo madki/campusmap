@@ -37,13 +37,11 @@ public class SubHeadingView extends LinearLayout {
 
     public void setNormalText(String text) {
         normalText.setText(text);
-        Log.d("SubHeadingView", "normal text set");
     }
 
     public void setLinkedText(String text) {
         SpannableString content = new SpannableString(text);
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-        Log.d("SubHeadingView", "link text set");
         linkedText.setText(content);
     }
 

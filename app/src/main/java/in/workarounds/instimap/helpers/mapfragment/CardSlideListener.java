@@ -14,8 +14,8 @@ import in.workarounds.instimap.views.SlidingUpPanelLayout;
 public class CardSlideListener implements SlidingUpPanelLayout.PanelSlideListener,
 		AnimatorUpdateListener {
 	private Context context;
-	private in.workarounds.instimap.views.SlidingUpPanelLayout slidingLayout;
-	private in.workarounds.instimap.views.EndDetectScrollView scrollView;
+	private SlidingUpPanelLayout slidingLayout;
+	private EndDetectScrollView scrollView;
 	private ValueAnimator animator;
 
 	private static final long TIME_ANIMATION_SHOW = 250;
