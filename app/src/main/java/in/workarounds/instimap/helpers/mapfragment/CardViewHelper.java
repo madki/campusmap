@@ -192,4 +192,25 @@ public class CardViewHelper {
         cardViewHolder.addMarkerIcon.setImageDrawable(getLockIcon(resultMarker));
     }
 
+    public boolean handleBackPress() {
+        if(cardSlideListener.handleBackPress()) {
+            return true;
+        } else {
+            return removeCurrentMarker();
+        }
+    }
+
+    private boolean removeCurrentMarker() {
+        EventBus eventBus = EventBus.getDefault();
+        StickyEvents.CurrentMarkerEvent event = eventBus.getStickyEvent(
+                StickyEvents.CurrentMarkerEvent.class);
+        if(event != null) {
+            if(event.marker!=null) {
+                eventBus.postSticky(new StickyEvents.CurrentMarkerEvent(null));
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

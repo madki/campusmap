@@ -58,24 +58,11 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        if(!topFragmentManager.closeTopFragments()) {
-            if(!removeCurrentMarker()) {
+        if(!topFragmentManager.handleBackPress()) {
+            if(!bottomFragmentManager.handleBackPress()) {
                 super.onBackPressed();
             }
         }
-    }
-
-    private boolean removeCurrentMarker() {
-        EventBus eventBus = EventBus.getDefault();
-        StickyEvents.CurrentMarkerEvent event = eventBus.getStickyEvent(
-                StickyEvents.CurrentMarkerEvent.class);
-        if(event != null) {
-            if(event.marker!=null) {
-                eventBus.postSticky(new StickyEvents.CurrentMarkerEvent(null));
-                return true;
-            }
-        }
-        return false;
     }
 
     private void initialSetUp() {

@@ -18,6 +18,7 @@ import in.workarounds.instimap.views.SlidingUpPanelLayout;
 import in.workarounds.instimap.views.mapview.CampusMapView;
 
 public class MapFragment extends EventFragment {
+    private CardViewHelper cardViewHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class MapFragment extends EventFragment {
         BarViewHelper barViewHelper = new BarViewHelper(getActivity(), barView);
 
         View cardView = rootView.findViewById(R.id.card_view);
-        CardViewHelper cardViewHelper = new CardViewHelper(getActivity(), cardView, cardSlideListener);
+        cardViewHelper = new CardViewHelper(getActivity(), cardView, cardSlideListener);
     }
 
     private Runnable setAnchor(final SlidingUpPanelLayout slidingLayout) {
@@ -65,5 +66,9 @@ public class MapFragment extends EventFragment {
     @Override
     protected boolean shouldRegisterSticky() {
         return true;
+    }
+
+    public boolean handleBackPress() {
+        return cardViewHelper.handleBackPress();
     }
 }

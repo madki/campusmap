@@ -67,4 +67,8 @@ public class TopFragmentManager {
         }
     }
 
+    public boolean handleBackPress() {
+        return closeTopFragments();
+    }
+
 }

@@ -14,7 +14,6 @@ public class BottomFragmentManager {
     private FragmentManager fragmentManager;
 
     private Fragment activeFragment = null;
-    private MapFragment mapFragment;
 
     public BottomFragmentManager(Context context, FragmentManager fragmentManager) {
         this.context = context;
@@ -40,5 +39,13 @@ public class BottomFragmentManager {
         } else {
             Toast.makeText(context, "Same fragment", Toast.LENGTH_LONG);
         }
+    }
+
+    public boolean handleBackPress() {
+        if(activeFragment instanceof MapFragment) {
+            MapFragment mapFragment = (MapFragment) activeFragment;
+            return mapFragment.handleBackPress();
+        }
+        return false;
     }
 }

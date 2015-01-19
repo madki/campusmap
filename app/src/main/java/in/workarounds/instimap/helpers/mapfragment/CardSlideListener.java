@@ -88,4 +88,8 @@ public class CardSlideListener implements SlidingUpPanelLayout.PanelSlideListene
 		slidingLayout.setPanelHeight(panelHeight);
 	}
 
+    public boolean handleBackPress() {
+        return slidingLayout.collapsePanel();
+    }
+
 }
