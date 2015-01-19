@@ -4,9 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView
+    <com.diegocarloslima.fgelv.lib.FloatingGroupExpandableListView
         android:id="@+id/list_index"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:groupIndicator="@null"/>
 
 </LinearLayout>

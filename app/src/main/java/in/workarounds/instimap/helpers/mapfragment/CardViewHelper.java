@@ -192,6 +192,4 @@ public class CardViewHelper {
         cardViewHolder.addMarkerIcon.setImageDrawable(getLockIcon(resultMarker));
     }
 
-
-
 }

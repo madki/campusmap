@@ -34,7 +34,7 @@ import in.workarounds.instimap.bus.StickyEvents;
 import in.workarounds.instimap.models.Locations;
 import in.workarounds.instimap.models.Marker;
 
-public class SearchFragment extends EventFragment implements AdapterView.OnItemClickListener, View.OnTouchListener, TextWatcher {
+public class SearchFragment extends EventFragment implements AdapterView.OnItemClickListener, View.OnTouchListener, TextWatcher, View.OnFocusChangeListener {
     private SearchAdapter adapter;
     private String MESSAGE = "Sorry, no such place in our data.";
     private EditText editText;
@@ -49,6 +49,7 @@ public class SearchFragment extends EventFragment implements AdapterView.OnItemC
 
         editText = (EditText) actionBarView.findViewById(R.id.search);
         editText.addTextChangedListener(this);
+        editText.setOnFocusChangeListener(this);
 
         super.onCreate(savedInstanceState);
     }
@@ -63,6 +64,7 @@ public class SearchFragment extends EventFragment implements AdapterView.OnItemC
         list.setOnItemClickListener(this);
         list.setOnTouchListener(this);
         list.setFastScrollEnabled(true);
+        editText.requestFocus();
 
         return rootView;
     }
@@ -185,5 +187,12 @@ public class SearchFragment extends EventFragment implements AdapterView.OnItemC
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if(hasFocus) {
+            adapter.filter(refineText(editText.getText().toString()));
+        }
     }
 }

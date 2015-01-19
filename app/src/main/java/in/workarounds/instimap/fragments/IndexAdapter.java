@@ -1,84 +1,91 @@
 package in.workarounds.instimap.fragments;
 
+
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import in.designlabs.instimap.R;
 import in.workarounds.instimap.models.Marker;
-import se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView;
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
-import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class IndexAdapter extends BaseAdapter implements StickyListHeadersAdapter, StickyListHeadersListView.OnHeaderClickListener {
+public class IndexAdapter extends BaseExpandableListAdapter {
 
-    public List<Marker> getMarkers() {
-        return markers;
+    private LayoutInflater layoutInflater;
+    private List<String> groupNames;
+    private HashMap<String, List<Marker>> markersByGroup;
+
+    public IndexAdapter(Context context, List<Marker> markerList) {
+        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        populateData(markerList);
     }
 
-    public void setMarkers(List<Marker> markers) {
-        this.markers = markers;
-    }
-
-    private List<Marker> markers;
-    private LayoutInflater inflater;
-    private long expandedHeader = 0;
-
-    public IndexAdapter(Context context, List<Marker> markers) {
-        inflater = LayoutInflater.from(context);
-        this.markers = markers;
-    }
-
-    @Override
-    public int getCount() {
-        return markers.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return markers.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (convertView == null) {
-            holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.list_item_index, parent, false);
-            holder.txtListChild = (TextView) convertView.findViewById(R.id.lblListItem);
-            holder.itemGroupColor = convertView.findViewById(R.id.item_group_color);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
+    private void populateData(List<Marker> markerList) {
+        groupNames = Arrays.asList(Marker.getGroupNames());
+        markersByGroup = new HashMap<>();
+        for (String groupName: groupNames) {
+            markersByGroup.put(groupName, new ArrayList<Marker>());
         }
-
-        Marker marker = markers.get(position);
-        holder.txtListChild.setText(marker.getName());
-        int color = marker.getColor();
-        holder.itemGroupColor.setBackgroundColor(color);
-
-        return convertView;
+        for (Marker marker: markerList) {
+            markersByGroup.get(marker.getGroupName()).add(marker);
+        }
     }
 
     @Override
-    public View getHeaderView(int position, View convertView, ViewGroup parent) {
+    public int getGroupCount() {
+        return groupNames.size();
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        String groupName = groupNames.get(groupPosition);
+        List<Marker> markerGroup = markersByGroup.get(groupName);
+        return markerGroup.size();
+    }
+
+    @Override
+    public String getGroup(int groupPosition) {
+        return groupNames.get(groupPosition);
+    }
+
+    @Override
+    public Marker getChild(int groupPosition, int childPosition) {
+        String groupName = groupNames.get(groupPosition);
+        List<Marker> markerGroup = markersByGroup.get(groupName);
+        Marker childMarker = markerGroup.get(childPosition);
+        return childMarker;
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return childPosition;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         HeaderViewHolder holder;
         if (convertView == null) {
             holder = new HeaderViewHolder();
-            convertView = inflater.inflate(R.layout.list_header_index, parent, false);
+            convertView = layoutInflater.inflate(R.layout.list_header_index, parent, false);
             holder.lblListHeader = (TextView) convertView.findViewById(R.id.lblListHeader);
             holder.iconExpand = (ImageView) convertView.findViewById(R.id.icon_expand);
             holder.groupColor = (ImageView) convertView.findViewById(R.id.group_color);
@@ -88,14 +95,13 @@ public class IndexAdapter extends BaseAdapter implements StickyListHeadersAdapte
             holder = (HeaderViewHolder) convertView.getTag();
         }
 
-        //set header text as first char in name
-        Marker marker = markers.get(position);
-        String headerText = marker.getGroupName();
-        long headerIndex = marker.getGroupIndex();
-        holder.lblListHeader.setText(headerText);
-        int color = marker.getColor();
+
+        String groupName = groupNames.get(groupPosition);
+        holder.lblListHeader.setText(groupName);
+        int groupId = Marker.getGroupId(groupName);
+        int color = Marker.getColor(groupId);
         holder.groupColor.setImageDrawable(new ColorDrawable(color));
-        if(headerIndex == expandedHeader) {
+        if(isExpanded) {
             holder.iconExpand.setImageResource(R.drawable.ic_action_expand);
         } else {
             holder.iconExpand.setImageResource(R.drawable.ic_action_next_item);
@@ -105,24 +111,35 @@ public class IndexAdapter extends BaseAdapter implements StickyListHeadersAdapte
     }
 
     @Override
-    public long getHeaderId(int position) {
-        return markers.get(position).getGroupIndex();
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+
+        if (convertView == null) {
+            holder = new ViewHolder();
+            convertView = layoutInflater.inflate(R.layout.list_item_index, parent, false);
+            holder.txtListChild = (TextView) convertView.findViewById(R.id.lblListItem);
+            holder.itemGroupColor = convertView.findViewById(R.id.item_group_color);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        Marker marker = markersByGroup.get(groupNames.get(groupPosition)).get(childPosition);
+        holder.txtListChild.setText(marker.getName());
+        int color = marker.getColor();
+        holder.itemGroupColor.setBackgroundColor(color);
+
+        return convertView;
     }
 
     @Override
-    public void onHeaderClick(StickyListHeadersListView l, View header, int itemPosition, long headerId, boolean currentlySticky) {
-        ExpandableStickyListHeadersListView expandableStickyList = (ExpandableStickyListHeadersListView) l;
-        ImageView iconExpand = (ImageView) header.findViewById(R.id.icon_expand);
-        if(expandableStickyList.isHeaderCollapsed(headerId)){
-            expandableStickyList.collapse(expandedHeader);
-            expandableStickyList.expand(headerId);
-            iconExpand.setImageResource(R.drawable.ic_action_expand);
-            expandedHeader = headerId;
-        } else {
-            expandedHeader = 0;
-            expandableStickyList.collapse(headerId);
-            iconExpand.setImageResource(R.drawable.ic_action_next_item);
-        }
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
+    }
+
+    public void setMarkers(List<Marker> markerList) {
+        populateData(markerList);
+        notifyDataSetChanged();
     }
 
     class HeaderViewHolder {
@@ -135,5 +152,4 @@ public class IndexAdapter extends BaseAdapter implements StickyListHeadersAdapte
         TextView txtListChild;
         View itemGroupColor;
     }
-
 }

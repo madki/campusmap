@@ -35,7 +35,7 @@ public class SearchAdapter extends BaseAdapter {
         this.setSettingsManager(context);
         l = Locale.getDefault();
         setMarkerLists(inputList);
-        map = new ArrayList<ScoredMarker>();
+        map = new ArrayList<>();
     }
 
     public void setMarkerLists(List<Marker> markerList) {

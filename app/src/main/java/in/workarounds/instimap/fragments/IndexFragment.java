@@ -5,11 +5,12 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.ExpandableListView;
+
+import com.diegocarloslima.fgelv.lib.FloatingGroupExpandableListView;
+import com.diegocarloslima.fgelv.lib.WrapperExpandableListAdapter;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,9 +19,8 @@ import in.designlabs.instimap.R;
 import in.workarounds.instimap.bus.EventFragment;
 import in.workarounds.instimap.bus.StickyEvents;
 import in.workarounds.instimap.models.Marker;
-import se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView;
 
-public class IndexFragment extends EventFragment implements AdapterView.OnItemClickListener {
+public class IndexFragment extends EventFragment implements ExpandableListView.OnChildClickListener {
     List<Marker> markers;
     IndexAdapter adapter;
 
@@ -34,13 +34,7 @@ public class IndexFragment extends EventFragment implements AdapterView.OnItemCl
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_index, container, false);
-        final ExpandableStickyListHeadersListView expandableStickyList = (ExpandableStickyListHeadersListView) rootView.findViewById(R.id.list_index);
-        expandableStickyList.setAdapter(adapter);
-        for (int i = 0; i < Marker.NUMBER_OF_GROUPS+1; i++) {
-            expandableStickyList.collapse(i);
-        }
-        expandableStickyList.setOnHeaderClickListener(adapter);
-        expandableStickyList.setOnItemClickListener(this);
+        setExpandableListView(rootView);
         return rootView;
     }
 
@@ -53,9 +47,19 @@ public class IndexFragment extends EventFragment implements AdapterView.OnItemCl
         List<Marker> newMarkerList = getSortedMarkers(event.locations.data);
         if(adapter!=null) {
             adapter.setMarkers(newMarkerList);
-            adapter.notifyDataSetInvalidated();
         } else {
         }
+    }
+
+    public void setExpandableListView(View rootView) {
+        FloatingGroupExpandableListView expandableListView =
+                (FloatingGroupExpandableListView) rootView.findViewById(R.id.list_index);
+        final WrapperExpandableListAdapter wrapperAdapter = new WrapperExpandableListAdapter(adapter);
+        expandableListView.setAdapter(wrapperAdapter);
+        for(int i = 0; i < Marker.NUMBER_OF_GROUPS+1; i++) {
+            expandableListView.collapseGroup(i);
+        }
+        expandableListView.setOnChildClickListener(this);
     }
 
     private List<Marker> getData() {
@@ -69,18 +73,13 @@ public class IndexFragment extends EventFragment implements AdapterView.OnItemCl
 
     private List<Marker> getSortedMarkers(HashMap<String, Marker> markersHashMap) {
         List<Marker> markers = new ArrayList<>(markersHashMap.values());
-        Collections.sort(markers, new MarkerGroupComparator());
         return markers;
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        EventBus.getDefault().postSticky(new StickyEvents.CurrentMarkerEvent(markers.get(position)));
-    }
-
-    private class MarkerGroupComparator implements Comparator<Marker> {
-        public int compare(Marker m1, Marker m2) {
-            return (m1.getGroupIndex() - m2.getGroupIndex());
-        }
+    public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+        Marker marker = adapter.getChild(groupPosition, childPosition);
+        EventBus.getDefault().postSticky(new StickyEvents.CurrentMarkerEvent(marker));
+        return true;
     }
 }
