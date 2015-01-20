@@ -14,11 +14,13 @@ import in.workarounds.instimap.bus.NormalEvents;
 import in.workarounds.instimap.helpers.mapfragment.BarViewHelper;
 import in.workarounds.instimap.helpers.mapfragment.CardSlideListener;
 import in.workarounds.instimap.helpers.mapfragment.CardViewHelper;
-import in.workarounds.instimap.views.SlidingUpPanelLayout;
+import in.workarounds.instimap.helpers.mapfragment.ExpandCardViewHelper;
+import in.workarounds.instimap.views.slidingpanel.SlidingUpPanelLayout;
 import in.workarounds.instimap.views.mapview.CampusMapView;
 
 public class MapFragment extends EventFragment {
     private CardViewHelper cardViewHelper;
+    private ExpandCardViewHelper expandCardViewHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -42,6 +44,9 @@ public class MapFragment extends EventFragment {
 
         View cardView = rootView.findViewById(R.id.card_view);
         cardViewHelper = new CardViewHelper(getActivity(), cardView, cardSlideListener);
+
+        View expandCardView = rootView.findViewById(R.id.expand_card_view);
+        expandCardViewHelper = new ExpandCardViewHelper(getActivity(), expandCardView, getChildFragmentManager());
     }
 
     private Runnable setAnchor(final SlidingUpPanelLayout slidingLayout) {

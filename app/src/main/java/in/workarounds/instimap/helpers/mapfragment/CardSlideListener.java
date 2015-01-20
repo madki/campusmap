@@ -8,14 +8,13 @@ import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
 
 import in.designlabs.instimap.R;
-import in.workarounds.instimap.views.EndDetectScrollView;
-import in.workarounds.instimap.views.SlidingUpPanelLayout;
+import in.workarounds.instimap.views.slidingpanel.SlidingUpPanelLayout;
 
 public class CardSlideListener implements SlidingUpPanelLayout.PanelSlideListener,
 		AnimatorUpdateListener {
 	private Context context;
 	private SlidingUpPanelLayout slidingLayout;
-	private EndDetectScrollView scrollView;
+//	private EndDetectScrollView scrollView;
 	private ValueAnimator animator;
 
 	private static final long TIME_ANIMATION_SHOW = 250;
@@ -23,8 +22,8 @@ public class CardSlideListener implements SlidingUpPanelLayout.PanelSlideListene
 	public CardSlideListener(Context context, SlidingUpPanelLayout slidingPaneLayout) {
 		this.context = context;
 		this.slidingLayout = slidingPaneLayout;
-		scrollView = (EndDetectScrollView) slidingPaneLayout
-				.findViewById(R.id.new_expanded_place_card_scroll);
+//		scrollView = (EndDetectScrollView) slidingPaneLayout
+//				.findViewById(R.id.expanded_card_scroll);
 
 		animator = new ValueAnimator();
 		animator.addUpdateListener(this);
@@ -48,15 +47,15 @@ public class CardSlideListener implements SlidingUpPanelLayout.PanelSlideListene
 
 	@Override
 	public void onPanelExpanded(View panel) {
-		scrollView.requestDisallowInterceptTouchEvent(false);
-		scrollView.setScrollingEnabled(true);
+//		scrollView.requestDisallowInterceptTouchEvent(false);
+//		scrollView.setScrollingEnabled(true);
 
     }
 
 	@Override
 	public void onPanelAnchored(View panel) {
-		scrollView.requestDisallowInterceptTouchEvent(true);
-		scrollView.setScrollingEnabled(false);
+//		scrollView.requestDisallowInterceptTouchEvent(true);
+//		scrollView.setScrollingEnabled(false);
     }
 
 	@Override

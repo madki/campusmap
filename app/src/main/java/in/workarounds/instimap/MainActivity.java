@@ -1,6 +1,7 @@
 package in.workarounds.instimap;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -114,7 +115,15 @@ public class MainActivity extends ActionBarActivity {
         });
     }
 
-    public void onEvent(StickyEvents.CurrentMarkerEvent event) {
+    public void onEventMainThread(StickyEvents.CurrentMarkerEvent event) {
         topFragmentManager.closeTopFragments();
+        Marker resultMarker = event.marker;
+        ColorDrawable colorDrawable;
+        if(resultMarker!=null) {
+            colorDrawable = new ColorDrawable(resultMarker.getColor());
+        } else {
+            colorDrawable = new ColorDrawable(R.color.primary_dark);
+        }
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
     }
 }

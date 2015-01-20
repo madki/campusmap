@@ -39,7 +39,6 @@ public class CardViewHelper {
         SubHeadingView placeSubHeading;
         ImageView placeColor;
         ImageButton addMarkerIcon;
-        View placeGroupColor;
     }
 
     private void setUp() {
@@ -64,7 +63,6 @@ public class CardViewHelper {
         cardViewHolder.placeSubHeading = (SubHeadingView) cardView.findViewById(R.id.place_sub_head);
         cardViewHolder.placeColor = (ImageView) cardView.findViewById(R.id.place_color);
         cardViewHolder.addMarkerIcon = (ImageButton) cardView.findViewById(R.id.add_marker_icon);
-        cardViewHolder.placeGroupColor = cardView.findViewById(R.id.place_group_color);
 
         cardViewHolder.addMarkerIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,8 +182,6 @@ public class CardViewHelper {
 
     private void setMarkerColors() {
         cardViewHolder.placeColor.setImageDrawable(new ColorDrawable(resultMarker.getColor()));
-        cardViewHolder.placeGroupColor.setBackgroundColor(
-                resultMarker.getColor());
     }
 
     private void setAddMarkerIcon() {

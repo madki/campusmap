@@ -1,4 +1,4 @@
-package in.workarounds.instimap.views;
+package in.workarounds.instimap.views.slidingpanel;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
