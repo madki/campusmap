@@ -92,8 +92,9 @@ public class BarViewHelper implements SharedPreferences.OnSharedPreferenceChange
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         String eventsKey = context.getResources().getString(R.string.setting_events_key);
-        if(key.equals(eventsKey)){
+        if(key.equals(eventsKey)) {
             setBarViewVisibility();
+            setDate();
         }
     }
 
@@ -115,6 +116,8 @@ public class BarViewHelper implements SharedPreferences.OnSharedPreferenceChange
             dateView.setText(dateString);
 
             getVenues();
+        } else {
+            EventBus.getDefault().postSticky(new StickyEvents.NoticeMarkersChangedEvent(new ArrayList<Marker>()));
         }
     }
 

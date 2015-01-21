@@ -24,7 +24,7 @@ public class BitmapHelper {
     private Bitmap greenMarker;
     private Bitmap grayMarker;
     private Bitmap blueLockedMarker;
-    private Bitmap blueConvoMarker;
+    private Bitmap blueNoticeMarker;
     private Bitmap yellowLockedMarker;
     private Bitmap greenLockedMarker;
     private Bitmap grayLockedMarker;
@@ -90,22 +90,34 @@ public class BitmapHelper {
             markerBitmap = blueMarker;
             if (MarkerListHelper.isAddedMarker(markerType)){
                 markerBitmap = blueLockedMarker;
-                if(MarkerListHelper.isNoticeMarker(markerType)) {
-                    markerBitmap = blueConvoMarker;
-                }
+            }
+            if(MarkerListHelper.isNoticeMarker(markerType)) {
+                markerBitmap = blueNoticeMarker;
             }
         } else if (color == Marker.COLOR_YELLOW) {
             markerBitmap = yellowMarker;
-            if (MarkerListHelper.isAddedMarker(markerType))
+            if (MarkerListHelper.isAddedMarker(markerType)) {
                 markerBitmap = yellowLockedMarker;
+            }
+            if(MarkerListHelper.isNoticeMarker(markerType)) {
+                markerBitmap = blueNoticeMarker;
+            }
         } else if (color == Marker.COLOR_GREEN) {
             markerBitmap = greenMarker;
-            if (MarkerListHelper.isAddedMarker(markerType))
+            if (MarkerListHelper.isAddedMarker(markerType)) {
                 markerBitmap = greenLockedMarker;
+            }
+            if(MarkerListHelper.isNoticeMarker(markerType)) {
+                markerBitmap = blueNoticeMarker;
+            }
         } else if (color == Marker.COLOR_GRAY) {
             markerBitmap = grayMarker;
-            if (MarkerListHelper.isAddedMarker(markerType))
+            if (MarkerListHelper.isAddedMarker(markerType)) {
                 markerBitmap = grayLockedMarker;
+            }
+            if(MarkerListHelper.isNoticeMarker(markerType)) {
+                markerBitmap = blueNoticeMarker;
+            }
         }
 
         if (CampusMapView.highlightedMarkerScale != 1.0f && MarkerListHelper.isResultMarker(markerType)) {
@@ -137,8 +149,8 @@ public class BitmapHelper {
                 R.drawable.marker_blue_s, options);
         blueLockedMarker = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.marker_blue_h, options);
-        blueConvoMarker = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.marker_blue_h_convo, options);
+        blueNoticeMarker = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.marker_blue_h_notice, options);
 
         yellowPointer = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.marker_dot_yellow, options);
@@ -185,7 +197,7 @@ public class BitmapHelper {
                 true);
         blueLockedMarker = Bitmap.createScaledBitmap(blueLockedMarker, (int) w,
                 (int) h, true);
-        blueConvoMarker = Bitmap.createScaledBitmap(blueConvoMarker, (int) w,
+        blueNoticeMarker = Bitmap.createScaledBitmap(blueNoticeMarker, (int) w,
                 (int) h, true);
         yellowLockedMarker = Bitmap.createScaledBitmap(yellowLockedMarker,
                 (int) w, (int) h, true);

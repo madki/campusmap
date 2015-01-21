@@ -334,13 +334,13 @@ public class CampusMapView extends SubsamplingScaleImageView {
             PointF point = marker.getPoint();
             int markerType = markerListHelper.getMarkerType(marker);
             if (isInView(point)) {
+                if(MarkerListHelper.isNoticeMarker(markerType)) {
+                    drawMarker(canvas, marker, markerType, point);
+                }
                 if (isShowPinScale(marker)
                         && !(markerListHelper.isResultMarker(marker))
                         && shouldShowUp(marker)) {
-                    Bitmap pin = bitmapHelper.drawMarkerBitmap(canvas,
-                        marker, markerType, sourceToViewCoord(point));
-                    textHelper.drawText(canvas, marker,
-                            markerType, sourceToViewCoord(point), pin);
+                    drawMarker(canvas, marker, markerType, point);
                 }
             }
         }
@@ -350,13 +350,17 @@ public class CampusMapView extends SubsamplingScaleImageView {
             PointF point = marker.getPoint();
             int markerType = markerListHelper.getMarkerType(marker);
             if (isInView(point)) {
-                Bitmap pin = bitmapHelper.drawMarkerBitmap(canvas,
-                        marker, markerType, sourceToViewCoord(point));
-                textHelper.drawText(canvas, marker,
-                        markerType, sourceToViewCoord(point), pin);
+                drawMarker(canvas, marker, markerType, point);
             }
         }
 
+    }
+
+    private void drawMarker(Canvas canvas, Marker marker, int markerType, PointF point) {
+        Bitmap pin = bitmapHelper.drawMarkerBitmap(canvas,
+                marker, markerType, sourceToViewCoord(point));
+        textHelper.drawText(canvas, marker,
+                markerType, sourceToViewCoord(point), pin);
     }
 
     public void showResultMarker(Marker resultMarker) {
