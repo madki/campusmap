@@ -23,6 +23,7 @@ import in.workarounds.instimap.models.Marker;
 import in.workarounds.instimap.models.Notice;
 
 public class CardNoticesAdapter extends BaseExpandableListAdapter {
+    private static String TAG = "CardNoticesAdapter";
     private LayoutInflater layoutInflater;
     private List<String> dates;
     private HashMap<String, List<Notice>> noticesByDate;
@@ -47,7 +48,6 @@ public class CardNoticesAdapter extends BaseExpandableListAdapter {
 
     public void onEventMainThread(StickyEvents.CurrentMarkerEvent event) {
         resultMarker = event.marker;
-        Log.d("CardNoticesAdapter", "event called: " + resultMarker.getName());
         populateData();
     }
 
@@ -66,13 +66,12 @@ public class CardNoticesAdapter extends BaseExpandableListAdapter {
         Date date = notice.getStartTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/mm/yyyy");
         String dateString = simpleDateFormat.format(date);
-        Log.d("CardNoticesAdapter", "date: " + dateString);
         if(!noticesByDate.containsKey(dateString)) {
             noticesByDate.put(dateString, new ArrayList<Notice>());
             dates.add(dateString);
-            Log.d("CardNoticesAdapter", "" + dates);
         }
         noticesByDate.get(dateString).add(notice);
+        notifyDataSetChanged();
     }
 
     private List<Notice> getEventsFromMarker(Marker marker) {
@@ -83,14 +82,16 @@ public class CardNoticesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getGroupCount() {
-        return dates.size();
+        int count = dates.size();
+        return count;
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
         String date = getGroup(groupPosition);
         List<Notice> notices = noticesByDate.get(date);
-        return notices.size();
+        int count = notices.size();
+        return count;
     }
 
     @Override
