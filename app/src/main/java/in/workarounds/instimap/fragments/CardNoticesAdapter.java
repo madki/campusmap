@@ -60,6 +60,7 @@ public class CardNoticesAdapter extends BaseExpandableListAdapter {
                 addNoticeToHashMap(notice);
             }
         }
+        notifyDataSetChanged();
     }
 
     private void addNoticeToHashMap(Notice notice) {
@@ -71,7 +72,6 @@ public class CardNoticesAdapter extends BaseExpandableListAdapter {
             dates.add(dateString);
         }
         noticesByDate.get(dateString).add(notice);
-        notifyDataSetChanged();
     }
 
     private List<Notice> getEventsFromMarker(Marker marker) {
