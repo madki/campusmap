@@ -2,7 +2,6 @@ package in.workarounds.instimap.fragments;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,8 +74,7 @@ public class CardNoticesAdapter extends BaseExpandableListAdapter {
     }
 
     private List<Notice> getEventsFromMarker(Marker marker) {
-//        List<Notice> notices = Notice.find(Notice.class, "venue_id=? order by start_time", Long.toString(marker.getId()));
-        List<Notice> notices = Notice.find(Notice.class, null, null, null, "start_time DESC", "1");
+        List<Notice> notices = Notice.find(Notice.class, "venue_id=? order by start_time", Long.toString(marker.getId()));
         return notices;
     }
 

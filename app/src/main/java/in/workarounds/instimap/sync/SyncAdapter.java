@@ -82,8 +82,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      * Put the data transfer code here.
      */
         Log.d("SyncAdapter", "Yo sync running");
-        this.syncNotices();
         this.syncVenues();
+        this.syncNotices();
     }
 
     private void syncNotices() {

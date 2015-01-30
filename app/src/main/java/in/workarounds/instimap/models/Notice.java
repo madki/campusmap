@@ -29,8 +29,10 @@ public class Notice extends ExtendedSugarRecord<Notice> {
     Date endTime;
     @SerializedName("public")
     boolean isPublic;
+    @SerializedName("is_event")
+    boolean isEvent;
     String cornersJson;
-    @SerializedName("upStrings_below")
+    @SerializedName("updates_below")
     int updatesBelow;
     @SerializedName("updates_above")
     int updatesAbove;
@@ -140,6 +142,15 @@ public class Notice extends ExtendedSugarRecord<Notice> {
 
     public void setPublic(boolean isPublic) {
         this.isPublic = isPublic;
+    }
+
+
+    public boolean isEvent() {
+        return isEvent;
+    }
+
+    public void setEvent(boolean isEvent) {
+        this.isEvent = isEvent;
     }
 
     public String getCornersJson() {
