@@ -28,7 +28,7 @@
             android:value="true" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
-            android:value="in.designlabs.instimap.models" />
+            android:value="in.workarounds.instimap.models" />
 
         <activity
             android:name="in.workarounds.instimap.MainActivity"
