@@ -38,4 +38,9 @@
     <string name="font_light">roboto_light.ttf</string>
 
     <string name="events">Events</string>
+
+    <string name="map_fragment_title">Map</string>
+    <string name="search_fragment_title">Search</string>
+    <string name="index_fragment_title">Places by groups</string>
+
 </resources>

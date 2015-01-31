@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,10 +35,11 @@ import in.workarounds.instimap.bus.StickyEvents;
 import in.workarounds.instimap.models.Locations;
 import in.workarounds.instimap.models.Marker;
 
-public class SearchFragment extends EventFragment implements AdapterView.OnItemClickListener, View.OnTouchListener, TextWatcher, View.OnFocusChangeListener {
+public class SearchFragment extends EventFragment implements AdapterView.OnItemClickListener, View.OnTouchListener, TextWatcher, View.OnFocusChangeListener, View.OnClickListener {
     private SearchAdapter adapter;
     private String MESSAGE = "Sorry, no such place in our data.";
     private EditText editText;
+    private ImageButton removeIcon;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,9 @@ public class SearchFragment extends EventFragment implements AdapterView.OnItemC
         editText = (EditText) actionBarView.findViewById(R.id.search);
         editText.addTextChangedListener(this);
         editText.setOnFocusChangeListener(this);
+
+        removeIcon = (ImageButton) actionBarView.findViewById(R.id.remove_icon);
+        removeIcon.setOnClickListener(this);
 
         super.onCreate(savedInstanceState);
     }
@@ -64,25 +69,27 @@ public class SearchFragment extends EventFragment implements AdapterView.OnItemC
         list.setOnItemClickListener(this);
         list.setOnTouchListener(this);
         list.setFastScrollEnabled(true);
+
         editText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
 
         return rootView;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search, menu);
+        MenuItem index = menu.findItem(R.id.index_icon);
+        index.setVisible(false);
+        MenuItem search = menu.findItem(R.id.search_icon);
+        search.setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.remove_icon:
-                editText.setText("");
-                break;
-        }
-        return true;
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -181,6 +188,7 @@ public class SearchFragment extends EventFragment implements AdapterView.OnItemC
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         String text = editText.getText().toString()
                 .toLowerCase(Locale.getDefault());
+        setSearchIconVisibility(text);
         adapter.filter(refineText(text));
     }
 
@@ -193,6 +201,19 @@ public class SearchFragment extends EventFragment implements AdapterView.OnItemC
     public void onFocusChange(View v, boolean hasFocus) {
         if(hasFocus) {
             adapter.filter(refineText(editText.getText().toString()));
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        editText.setText("");
+    }
+
+    private void setSearchIconVisibility(String text) {
+        if (text.equals("")) {
+            removeIcon.setVisibility(View.GONE);
+        } else {
+            removeIcon.setVisibility(View.VISIBLE);
         }
     }
 }
