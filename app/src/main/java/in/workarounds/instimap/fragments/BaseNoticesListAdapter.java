@@ -10,12 +10,14 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import in.designlabs.instimap.R;
 import in.workarounds.instimap.models.Notice;
+import in.workarounds.instimap.util.TimeUtil;
 
 /**
  * Created by manidesto on 31/01/15.
@@ -43,7 +45,7 @@ public abstract class BaseNoticesListAdapter extends BaseExpandableListAdapter {
 
     private void addNoticeToHashMap(Notice notice) {
         Date date = notice.getStartTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/mm/yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String dateString = simpleDateFormat.format(date);
         if(!noticesByDate.containsKey(dateString)) {
             noticesByDate.put(dateString, new ArrayList<Notice>());
@@ -101,11 +103,9 @@ public abstract class BaseNoticesListAdapter extends BaseExpandableListAdapter {
         HeaderViewHolder holder;
         if (convertView == null) {
             holder = new HeaderViewHolder();
-            convertView = layoutInflater.inflate(R.layout.list_header_index, parent, false);
+            convertView = layoutInflater.inflate(R.layout.list_header_notices, parent, false);
             holder.lblListHeader = (TextView) convertView.findViewById(R.id.lblListHeader);
             holder.iconExpand = (ImageView) convertView.findViewById(R.id.icon_expand);
-            holder.groupColor = (ImageView) convertView.findViewById(R.id.group_color);
-
             convertView.setTag(holder);
         } else {
             holder = (HeaderViewHolder) convertView.getTag();
@@ -114,7 +114,6 @@ public abstract class BaseNoticesListAdapter extends BaseExpandableListAdapter {
 
         String date = getGroup(groupPosition);
         holder.lblListHeader.setText(date);
-        holder.groupColor.setVisibility(View.INVISIBLE);
         if(isExpanded) {
             holder.iconExpand.setImageResource(R.drawable.ic_action_expand);
         } else {
@@ -130,17 +129,18 @@ public abstract class BaseNoticesListAdapter extends BaseExpandableListAdapter {
 
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = layoutInflater.inflate(R.layout.list_item_index, parent, false);
-            holder.txtListChild = (TextView) convertView.findViewById(R.id.lblListItem);
-            holder.itemGroupColor = convertView.findViewById(R.id.item_group_color);
+            convertView = layoutInflater.inflate(R.layout.list_item_notices, parent, false);
+            holder.timeTextView = (TextView) convertView.findViewById(R.id.notice_start_time);
+            holder.titleTextView = (TextView) convertView.findViewById(R.id.notice_title);
+            holder.durationTextView = (TextView) convertView.findViewById(R.id.notice_duration);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         Notice notice = getChild(groupPosition, childPosition);
-        holder.txtListChild.setText(notice.getTitle());
-        holder.itemGroupColor.setVisibility(View.INVISIBLE);
+        holder.titleTextView.setText(notice.getTitle());
+        holder.timeTextView.setText(TimeUtil.getAmPmString(notice.getStartTime()));
 
         return convertView;
     }
@@ -153,11 +153,11 @@ public abstract class BaseNoticesListAdapter extends BaseExpandableListAdapter {
     class HeaderViewHolder {
         TextView lblListHeader;
         ImageView iconExpand;
-        ImageView groupColor;
     }
 
     class ViewHolder {
-        TextView txtListChild;
-        View itemGroupColor;
+        TextView timeTextView;
+        TextView titleTextView;
+        TextView durationTextView;
     }
 }

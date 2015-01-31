@@ -22,7 +22,7 @@
         android:background="@color/list_item_seperator_white"/>
     <in.workarounds.instimap.views.TypeFacedTextView
         android:id="@+id/notice_start_time"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
@@ -32,7 +32,7 @@
         custom:typeFace="light"/>
     <in.workarounds.instimap.views.TypeFacedTextView
         android:id="@+id/notice_title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/notice_start_time"
@@ -41,7 +41,7 @@
         custom:typeFace="regular"/>
     <in.workarounds.instimap.views.TypeFacedTextView
         android:id="@+id/notice_duration"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/notice_title"

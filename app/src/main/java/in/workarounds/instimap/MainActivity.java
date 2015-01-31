@@ -77,7 +77,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void startFragments() {
-        bottomFragmentManager.openMapFragment();
+        bottomFragmentManager.openNoticesFragment();
     }
 
     private void setUpActionBar() {

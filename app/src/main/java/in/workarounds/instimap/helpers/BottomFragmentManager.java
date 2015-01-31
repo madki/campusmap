@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import in.designlabs.instimap.R;
 import in.workarounds.instimap.fragments.MapFragment;
+import in.workarounds.instimap.fragments.NoticesFragment;
 
 public class BottomFragmentManager {
     private Context context;
@@ -22,6 +23,9 @@ public class BottomFragmentManager {
 
     public void openMapFragment() {
         openFragment(new MapFragment());
+    }
+    public void openNoticesFragment() {
+        openFragment(new NoticesFragment());
     }
 
     private void openFragment(Fragment fragment) {
