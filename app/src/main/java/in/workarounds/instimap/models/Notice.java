@@ -1,6 +1,7 @@
 package in.workarounds.instimap.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.orm.dsl.Ignore;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,7 +9,9 @@ import org.json.JSONObject;
 import java.util.Date;
 
 public class Notice extends ExtendedSugarRecord<Notice> {
-    // @SerializedName("id")
+    @Ignore
+    public String syncUrl = "notices/modified";
+
     long dbId;
     String dataJson;
     @SerializedName("user_id")
@@ -39,10 +42,17 @@ public class Notice extends ExtendedSugarRecord<Notice> {
     @SerializedName("venue_id")
     long venueId;
 
+    @Override
+    public String getSyncUrl() {
+        return syncUrl;
+    }
+
+    @Override
     public long getDbId() {
         return dbId;
     }
 
+    @Override
     public void setDbId(long dbId) {
         this.dbId = dbId;
     }
@@ -112,6 +122,7 @@ public class Notice extends ExtendedSugarRecord<Notice> {
         this.created = created;
     }
 
+    @Override
     public Date getModified() {
         return modified;
     }

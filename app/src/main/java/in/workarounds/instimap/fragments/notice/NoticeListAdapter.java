@@ -1,10 +1,12 @@
 package in.workarounds.instimap.fragments.notice;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -81,6 +83,13 @@ public class NoticeListAdapter extends BaseExpandableListAdapter {
     public void onEventMainThread(StickyEvents.CurrentMarkerEvent event) {
         resultMarker = event.marker;
         if(fragment_type == NoticeListFragment.MARKER_EVENTS) {
+            populateData();
+        }
+    }
+
+    public void onEventMainThread(StickyEvents.SyncStatusEvent syncStatusEvent) {
+        Log.d("NoticeListAdapter", "syn status: " + syncStatusEvent.status);
+        if(syncStatusEvent.status == StickyEvents.SyncStatusEvent.FINISHED) {
             populateData();
         }
     }
@@ -168,6 +177,8 @@ public class NoticeListAdapter extends BaseExpandableListAdapter {
             holder.iconExpand.setImageResource(R.drawable.ic_action_next_item);
         }
 
+        ExpandableListView mExpandableListView = (ExpandableListView) parent;
+        mExpandableListView.expandGroup(groupPosition);
         return convertView;
     }
 

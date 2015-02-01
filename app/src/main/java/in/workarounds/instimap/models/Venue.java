@@ -2,10 +2,13 @@ package in.workarounds.instimap.models;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.orm.dsl.Ignore;
 
 import java.util.Date;
 
 public class Venue extends ExtendedSugarRecord {
+    @Ignore
+    public String syncUrl = "venues/modified";
 
     long dbId;
     String name;
@@ -22,31 +25,21 @@ public class Venue extends ExtendedSugarRecord {
     String parentRelation;
     String description;
     Date created;
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
     Date modified;
     long lat;
     long lng;
 
+    @Override
+    public String getSyncUrl() {
+        return syncUrl;
+    }
+
+    @Override
     public long getDbId() {
         return dbId;
     }
 
+    @Override
     public void setDbId(long dbId) {
         this.dbId = dbId;
     }
@@ -113,6 +106,23 @@ public class Venue extends ExtendedSugarRecord {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     public long getLat() {

@@ -1,8 +1,13 @@
 package in.workarounds.instimap.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.orm.dsl.Ignore;
 
-public class CornerPosition extends ExtendedSugarRecord<CornerPosition> {
+import java.util.Date;
+
+public class CornerRelation extends ExtendedSugarRecord<CornerRelation> {
+    @Ignore
+    public String syncUrl = "cornerRelations/modified";
 
     @SerializedName("id")
     long dbId;
@@ -10,6 +15,15 @@ public class CornerPosition extends ExtendedSugarRecord<CornerPosition> {
     long boardId;
     @SerializedName("corner_id")
     long cornerId;
+    Date created;
+    Date modified;
+    @SerializedName("is_child")
+    boolean isChild;
+
+    @Override
+    public String getSyncUrl() {
+        return syncUrl;
+    }
 
     public boolean isChild() {
         return isChild;
@@ -35,16 +49,34 @@ public class CornerPosition extends ExtendedSugarRecord<CornerPosition> {
         this.boardId = boardId;
     }
 
+    @Override
     public long getDbId() {
         return dbId;
     }
 
+    @Override
     public void setDbId(long dbId) {
         this.dbId = dbId;
     }
 
-    @SerializedName("is_child")
-    boolean isChild;
 
-    public CornerPosition() {}
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    @Override
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
+
+    public CornerRelation() {}
 }
