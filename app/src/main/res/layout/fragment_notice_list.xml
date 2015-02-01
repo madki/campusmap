@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <com.diegocarloslima.fgelv.lib.FloatingGroupExpandableListView
-        android:id="@+id/list_card_notices"
+        android:id="@+id/list_notices"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:groupIndicator="@null"/>

@@ -20,12 +20,12 @@ public class NoticesFragment extends Fragment {
     }
 
     private void setUp(View rootView) {
-        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.card_view_pager);
+        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
         NoticesFragmentPagerAdapter noticesFragmentPagerAdapter = new NoticesFragmentPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(noticesFragmentPagerAdapter);
 
 //        pagerTitleStrip = (PagerTitleStrip) expandCardView.findViewById(R.id.pager_title_strip);
-        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) rootView.findViewById(R.id.card_sliding_tabs);
+        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) rootView.findViewById(R.id.sliding_tabs);
         slidingTabLayout.setDistributeEvenly(true);
         slidingTabLayout.setViewPager(viewPager);
     }

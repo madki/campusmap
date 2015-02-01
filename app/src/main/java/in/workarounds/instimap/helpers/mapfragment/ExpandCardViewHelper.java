@@ -29,12 +29,12 @@ public class ExpandCardViewHelper {
     }
 
     private void setUp() {
-        ViewPager viewPager = (ViewPager) expandCardView.findViewById(R.id.card_view_pager);
+        ViewPager viewPager = (ViewPager) expandCardView.findViewById(R.id.view_pager);
         CardPagerAdapter cardPagerAdapter = new CardPagerAdapter(cardFragmentManager);
         viewPager.setAdapter(cardPagerAdapter);
 
 //        pagerTitleStrip = (PagerTitleStrip) expandCardView.findViewById(R.id.pager_title_strip);
-        slidingTabLayout = (SlidingTabLayout) expandCardView.findViewById(R.id.card_sliding_tabs);
+        slidingTabLayout = (SlidingTabLayout) expandCardView.findViewById(R.id.sliding_tabs);
         slidingTabLayout.setDistributeEvenly(true);
         slidingTabLayout.setViewPager(viewPager);
 

@@ -69,9 +69,6 @@ public class IndexFragment extends EventFragment implements ExpandableListView.O
                 (FloatingGroupExpandableListView) rootView.findViewById(R.id.list_index);
         final WrapperExpandableListAdapter wrapperAdapter = new WrapperExpandableListAdapter(adapter);
         expandableListView.setAdapter(wrapperAdapter);
-        for(int i = 0; i < Marker.NUMBER_OF_GROUPS+1; i++) {
-            expandableListView.collapseGroup(i);
-        }
         expandableListView.setDividerHeight(0);
         expandableListView.setOnChildClickListener(this);
     }

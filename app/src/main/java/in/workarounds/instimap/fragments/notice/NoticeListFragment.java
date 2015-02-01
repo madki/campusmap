@@ -44,7 +44,7 @@ public class NoticeListFragment extends Fragment{
     public void setExpandableListView(View rootView, int fragment_type) {
         NoticeListAdapter adapter = new NoticeListAdapter(getActivity(), fragment_type);
         FloatingGroupExpandableListView expandableListView =
-                (FloatingGroupExpandableListView) rootView.findViewById(R.id.list_card_notices);
+                (FloatingGroupExpandableListView) rootView.findViewById(R.id.list_notices);
         final WrapperExpandableListAdapter wrapperAdapter = new WrapperExpandableListAdapter(adapter);
         expandableListView.setAdapter(wrapperAdapter);
         expandableListView.setDividerHeight(0);
