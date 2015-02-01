@@ -19,8 +19,7 @@ public class CustomGson {
         this.gsonBuilder.registerTypeAdapter(Venue.class, new VenueDeserializer());
         this.gsonBuilder.registerTypeAdapter(Board.class, new BoardDeserializer());
         this.gsonBuilder.registerTypeAdapter(Corner.class, new CornerDeserializer());
-
-        this.gsonBuilder.registerTypeAdapter(Filter.class, new GenericDeserializer<Filter>());
+        this.gsonBuilder.registerTypeAdapter(Filter.class, new FilterDeserializer());
 
         this.gson = this.gsonBuilder.create();
     }

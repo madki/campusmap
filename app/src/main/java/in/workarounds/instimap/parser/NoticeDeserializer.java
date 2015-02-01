@@ -34,8 +34,8 @@ public class NoticeDeserializer
         notice.setCornersJson(corners);
 
         if(!notice.isEvent()) {
-            notice.setStartTime(new Date());
-            notice.setEndTime(new Date());
+            notice.setStartTime(new Date(0L));
+            notice.setEndTime(new Date(0L));
         }
         return notice;
     }
