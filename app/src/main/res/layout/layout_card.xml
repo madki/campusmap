@@ -78,7 +78,7 @@
 
         <include
             android:id="@+id/expand_card_view"
-            layout="@layout/layout_card_expanded" />
+            layout="@layout/layout_titled_view_pager" />
 
         <!--<View-->
             <!--android:layout_width="match_parent"-->
