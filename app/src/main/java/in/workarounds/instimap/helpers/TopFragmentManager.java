@@ -5,12 +5,14 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.widget.Toast;
 
 import in.designlabs.instimap.R;
 import in.workarounds.instimap.fragments.SettingsFragment;
 import in.workarounds.instimap.fragments.map.IndexFragment;
 import in.workarounds.instimap.fragments.map.SearchFragment;
+import in.workarounds.instimap.fragments.notice.NoticeDetailFragment;
 
 public class TopFragmentManager {
     private Context context;
@@ -42,6 +44,12 @@ public class TopFragmentManager {
 
     public void openSettingsFragment() {
         openFragment(settingsFragment);
+    }
+
+    public void openNoticeDetailFragment(){
+        NoticeDetailFragment fragment = new NoticeDetailFragment();
+        openFragment(fragment);
+        Log.d("TopFragmentManager", "Opened NoticeDetailFragment");
     }
 
     private void openFragment(Fragment fragment) {

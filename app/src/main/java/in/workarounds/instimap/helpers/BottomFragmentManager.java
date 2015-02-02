@@ -28,6 +28,14 @@ public class BottomFragmentManager {
         openFragment(new NoticesFragment());
     }
 
+    public void toggleFragment() {
+        if(activeFragment instanceof MapFragment) {
+            openNoticesFragment();
+        } else {
+            openMapFragment();
+        }
+    }
+
     private void openFragment(Fragment fragment) {
         if(activeFragment != fragment) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -44,6 +52,7 @@ public class BottomFragmentManager {
             Toast.makeText(context, "Same fragment", Toast.LENGTH_LONG);
         }
     }
+
 
     public boolean handleBackPress() {
         if(activeFragment instanceof MapFragment) {

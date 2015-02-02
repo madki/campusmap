@@ -15,4 +15,9 @@
         android:icon="@drawable/settings"
         app:showAsAction="always"
         android:title="Settings" />
+    <item
+        android:id="@+id/toggle_icon"
+        android:icon="@drawable/abc_ic_menu_copy_mtrl_am_alpha"
+        app:showAsAction="always"
+        android:title="Toggle" />
 </menu>

@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -55,6 +56,8 @@ public class MainActivity extends ActionBarActivity {
             case R.id.settings_icon:
                 topFragmentManager.openSettingsFragment();
                 return true;
+            case R.id.toggle_icon:
+                bottomFragmentManager.toggleFragment();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -80,7 +83,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void startFragments() {
-        bottomFragmentManager.openMapFragment();
+        bottomFragmentManager.openNoticesFragment();
     }
 
     private void setUpActionBar() {
@@ -128,5 +131,10 @@ public class MainActivity extends ActionBarActivity {
             colorDrawable = new ColorDrawable(R.color.primary_dark);
         }
         getSupportActionBar().setBackgroundDrawable(colorDrawable);
+    }
+
+    public void onEventMainThread(StickyEvents.ShowNoticeEvent event){
+        Log.d("MainActivity", "ShowNoticeEvent listened");
+        topFragmentManager.openNoticeDetailFragment();
     }
 }

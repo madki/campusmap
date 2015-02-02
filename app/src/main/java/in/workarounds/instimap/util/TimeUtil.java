@@ -10,4 +10,9 @@ public class TimeUtil {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(date);
     }
+
+    public static String getAgoString(Date date){
+        //TODO: Ideally should return 53m or 2h, Jan 22 or 21/12/2014
+        return "Jan 4";
+    }
 }

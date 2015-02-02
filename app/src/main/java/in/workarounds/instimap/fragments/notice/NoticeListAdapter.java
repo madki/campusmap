@@ -227,7 +227,7 @@ public class NoticeListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
+        return true;
     }
 
     class HeaderViewHolder {
