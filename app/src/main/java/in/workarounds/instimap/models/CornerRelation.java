@@ -9,7 +9,6 @@ public class CornerRelation extends ExtendedSugarRecord<CornerRelation> {
     @Ignore
     public String syncUrl = "cornerRelations/modified";
 
-    @SerializedName("id")
     long dbId;
     @SerializedName("board_id")
     long boardId;

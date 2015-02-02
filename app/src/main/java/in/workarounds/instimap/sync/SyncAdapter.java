@@ -19,6 +19,7 @@ import de.greenrobot.event.EventBus;
 import in.workarounds.instimap.bus.StickyEvents;
 import in.workarounds.instimap.models.Board;
 import in.workarounds.instimap.models.Corner;
+import in.workarounds.instimap.models.CornerRelation;
 import in.workarounds.instimap.models.Filter;
 import in.workarounds.instimap.models.Notice;
 import in.workarounds.instimap.models.Venue;
@@ -93,6 +94,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         Type boardListType = new TypeToken<ArrayList<Board>>() {}.getType();
         SyncTableHelper.syncTable(Board.class, boardListType);
+
+        Type cornerRelationListType = new TypeToken<ArrayList<CornerRelation>>() {}.getType();
+        SyncTableHelper.syncTable(CornerRelation.class, cornerRelationListType);
 
         Type noticeListType = new TypeToken<ArrayList<Notice>>() {}.getType();
         SyncTableHelper.syncTable(Notice.class, noticeListType);

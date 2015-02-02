@@ -103,6 +103,10 @@ public class Corner extends ExtendedSugarRecord<Corner> {
         this.isOpen = isOpen;
     }
 
+    public String toString() {
+        return getName();
+    }
+
     public Corner() {}
 }
 

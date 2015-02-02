@@ -19,6 +19,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import in.designlabs.instimap.R;
 import in.workarounds.instimap.bus.StickyEvents;
+import in.workarounds.instimap.models.Filter;
 import in.workarounds.instimap.models.Marker;
 import in.workarounds.instimap.models.Notice;
 import in.workarounds.instimap.util.TimeUtil;
@@ -62,6 +63,26 @@ public class NoticeListAdapter extends BaseExpandableListAdapter {
             }
         }
         return notices;
+    }
+
+    private List<Notice> getNoticeUpdates(long boardId, long cornerId) {
+        List<Notice> notices = new ArrayList<>();
+        if(cornerId!=0) {
+            List<Filter> filters = Filter.find(Filter.class, "corner_id = ?", Long.toString(cornerId));
+
+            for (Filter filter: filters) {
+                List<Notice> noticeList = Notice.find(Notice.class, "db_id = ?", Long.toString(filter.getNoticeId()));
+                notices.addAll(noticeList);
+            }
+        } else if(boardId!=0) {
+
+        } else {
+        }
+        return notices;
+    }
+
+    private List<Notice> getNoticeEvents(long boardId, long cornerId) {
+        return null;
     }
 
     private void addNoticeToHashMap(Notice notice) {

@@ -50,4 +50,18 @@ public class StickyEvents {
         }
     }
 
+    public static class BoardSpinnerEvent {
+        public long boardId = 0;
+        public BoardSpinnerEvent(long boardId) {
+            this.boardId = boardId;
+        }
+    }
+
+    public static class CornerSpinnerEvent {
+        public long cornerId = 0;
+        public CornerSpinnerEvent(long cornerId) {
+            this.cornerId = cornerId;
+        }
+    }
+
 }

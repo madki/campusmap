@@ -93,6 +93,9 @@ public class Board extends ExtendedSugarRecord<Board> {
         this.tag = tag;
     }
 
+    public String toString() {
+        return getTitle();
+    }
 
     public Board() {}
 }
