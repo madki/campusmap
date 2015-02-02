@@ -43,4 +43,6 @@
     <string name="search_fragment_title">Search</string>
     <string name="index_fragment_title">Places by groups</string>
 
+    <string name="lorem_20">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est dignissimos dicta consequatur dolorem impedit error nostrum quas ex a beatae!</string>
+
 </resources>

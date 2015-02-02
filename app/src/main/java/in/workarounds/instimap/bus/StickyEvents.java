@@ -4,6 +4,7 @@ import java.util.List;
 
 import in.workarounds.instimap.models.Locations;
 import in.workarounds.instimap.models.Marker;
+import in.workarounds.instimap.models.Notice;
 
 public class StickyEvents {
 
@@ -47,6 +48,21 @@ public class StickyEvents {
 
         public SyncStatusEvent(int status) {
             this.status = status;
+        }
+    }
+
+    public static class ShowNoticeEvent {
+        public Notice notice;
+
+        public ShowNoticeEvent(Notice notice){
+            this.notice = notice;
+        }
+
+        public ShowNoticeEvent(int dbId){
+            List<Notice> notices = Notice.find(Notice.class, "db_id = ?", Integer.toString(dbId));
+            if(!notices.isEmpty()){
+                this.notice = notices.get(0);
+            }
         }
     }
 

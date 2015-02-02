@@ -1,5 +1,7 @@
 package in.workarounds.instimap.models;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.orm.dsl.Ignore;
 
@@ -7,6 +9,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.List;
+
+import in.workarounds.instimap.parser.BlockDeserializer;
 
 public class Notice extends ExtendedSugarRecord<Notice> {
     @Ignore
@@ -14,6 +19,8 @@ public class Notice extends ExtendedSugarRecord<Notice> {
 
     long dbId;
     String dataJson;
+    @Ignore
+    NoticeData noticeData;
     @SerializedName("user_id")
     long userId;
     @SerializedName("position_id")
@@ -195,6 +202,27 @@ public class Notice extends ExtendedSugarRecord<Notice> {
     public void setVenueId(long venueId) {
         this.venueId = venueId;
     }
+
+    public NoticeData getNoticeData(){
+        if(noticeData == null){
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Block.class, new BlockDeserializer())
+                    .create();
+            noticeData = gson.fromJson(getDataJson(), NoticeData.class);
+        }
+        return noticeData;
+    }
+
+    public List<Notice> getUpdates(){
+        if(getUpdatesAbove() == 0) {
+            return Notice.find(Notice.class, "db_id = ? or parent = ?", Long.toString(getDbId()), Long.toString(getDbId()));
+        }
+        else{
+            return Notice.find(Notice.class, "db_id = ? or parent = ?", Long.toString(getParent()), Long.toString(getParent()));
+        }
+    }
+
+
 
     public String getTitle() {
         String title = "";
