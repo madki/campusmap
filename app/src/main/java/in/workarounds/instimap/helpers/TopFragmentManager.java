@@ -8,8 +8,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
 import in.designlabs.instimap.R;
-import in.workarounds.instimap.fragments.IndexFragment;
-import in.workarounds.instimap.fragments.SearchFragment;
+import in.workarounds.instimap.fragments.map.IndexFragment;
+import in.workarounds.instimap.fragments.map.SearchFragment;
 
 public class TopFragmentManager {
     private Context context;

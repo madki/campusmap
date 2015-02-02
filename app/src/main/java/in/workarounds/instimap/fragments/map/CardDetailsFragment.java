@@ -1,4 +1,4 @@
-package in.workarounds.instimap.fragments;
+package in.workarounds.instimap.fragments.map;
 
 
 import android.graphics.Color;

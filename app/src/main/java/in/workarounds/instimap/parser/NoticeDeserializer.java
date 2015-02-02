@@ -1,7 +1,5 @@
 package in.workarounds.instimap.parser;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -36,9 +34,8 @@ public class NoticeDeserializer
         notice.setCornersJson(corners);
 
         if(!notice.isEvent()) {
-            Log.d("NoticeDeserializer", "notice: " + notice.getTitle());
-            notice.setStartTime(new Date());
-            notice.setEndTime(new Date());
+            notice.setStartTime(new Date(0L));
+            notice.setEndTime(new Date(0L));
         }
         return notice;
     }

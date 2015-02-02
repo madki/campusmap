@@ -2,12 +2,14 @@ package in.workarounds.instimap.models;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.orm.dsl.Ignore;
 
 import java.util.Date;
 
 public class Corner extends ExtendedSugarRecord<Corner> {
+    @Ignore
+    public String syncUrl = "corners/modified";
 
-    @SerializedName("id")
     long dbId;
     @SerializedName("user_id")
     long userId;
@@ -15,15 +17,23 @@ public class Corner extends ExtendedSugarRecord<Corner> {
     String name;
     @SerializedName("filter_count")
     int filterCount;
-    String header;
+    String headerJson;
     Date created;
+    Date modified;
     @SerializedName("is_open")
     boolean isOpen;
 
+    @Override
+    public String getSyncUrl() {
+        return syncUrl;
+    }
+
+    @Override
     public long getDbId() {
         return dbId;
     }
 
+    @Override
     public void setDbId(long dbId) {
         this.dbId = dbId;
     }
@@ -60,12 +70,12 @@ public class Corner extends ExtendedSugarRecord<Corner> {
         this.filterCount = filterCount;
     }
 
-    public String getHeader() {
-        return header;
+    public String getHeaderJson() {
+        return headerJson;
     }
 
-    public void setHeader(String header) {
-        this.header = header;
+    public void setHeaderJson(String headerJson) {
+        this.headerJson = headerJson;
     }
 
     public Date getCreated() {
@@ -74,6 +84,15 @@ public class Corner extends ExtendedSugarRecord<Corner> {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    @Override
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
     }
 
     public boolean isOpen() {

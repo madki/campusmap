@@ -39,4 +39,15 @@ public class StickyEvents {
         }
     }
 
+    public static class SyncStatusEvent {
+        public static int DID_NOT_START = 0;
+        public static int STARTED = 1;
+        public static int FINISHED = 2;
+        public int status = DID_NOT_START;
+
+        public SyncStatusEvent(int status) {
+            this.status = status;
+        }
+    }
+
 }

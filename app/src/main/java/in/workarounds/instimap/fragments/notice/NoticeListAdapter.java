@@ -1,35 +1,41 @@
-package in.workarounds.instimap.fragments;
+package in.workarounds.instimap.fragments.notice;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import in.designlabs.instimap.R;
+import in.workarounds.instimap.bus.StickyEvents;
+import in.workarounds.instimap.models.Marker;
 import in.workarounds.instimap.models.Notice;
 import in.workarounds.instimap.util.TimeUtil;
 
-/**
- * Created by manidesto on 31/01/15.
- */
-public abstract class BaseNoticesListAdapter extends BaseExpandableListAdapter {
+
+public class NoticeListAdapter extends BaseExpandableListAdapter {
     private static String TAG = "BaseNoticesListAdapter";
     private LayoutInflater layoutInflater;
     private List<String> dates;
     private HashMap<String, List<Notice>> noticesByDate;
+    private int fragment_type = NoticeListFragment.DEFAULT_TYPE;
+    private Marker resultMarker;
 
-    public BaseNoticesListAdapter(Context context) {
+    public NoticeListAdapter(Context context, int fragment_type) {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.fragment_type = fragment_type;
+        EventBus.getDefault().registerSticky(this);
         populateData();
     }
 
@@ -43,8 +49,28 @@ public abstract class BaseNoticesListAdapter extends BaseExpandableListAdapter {
         notifyDataSetChanged();
     }
 
+    private List<Notice> getNoticesList() {
+        List<Notice> notices = new ArrayList<>();
+        if(fragment_type == NoticeListFragment.EVENTS) {
+            notices = Notice.find(Notice.class, "is_event = 1 order by start_time");
+        } else if(fragment_type == NoticeListFragment.UPDATES) {
+            notices = Notice.find(Notice.class, "1=1 order by modified DESC");
+        } else if(fragment_type == NoticeListFragment.MARKER_EVENTS) {
+            setResultMarker();
+            if(resultMarker != null) {
+                notices = getEventsFromMarker(resultMarker);
+            }
+        }
+        return notices;
+    }
+
     private void addNoticeToHashMap(Notice notice) {
-        Date date = notice.getStartTime();
+        Date date;
+        if(fragment_type == NoticeListFragment.UPDATES) {
+            date = notice.getModified();
+        } else {
+            date = notice.getStartTime();
+        }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String dateString = simpleDateFormat.format(date);
         if(!noticesByDate.containsKey(dateString)) {
@@ -54,7 +80,38 @@ public abstract class BaseNoticesListAdapter extends BaseExpandableListAdapter {
         noticesByDate.get(dateString).add(notice);
     }
 
-    protected abstract List<Notice> getNoticesList();
+    public void onEventMainThread(StickyEvents.CurrentMarkerEvent event) {
+        resultMarker = event.marker;
+        if(fragment_type == NoticeListFragment.MARKER_EVENTS) {
+            populateData();
+        }
+    }
+
+    public void onEventMainThread(StickyEvents.SyncStatusEvent syncStatusEvent) {
+        Log.d("NoticeListAdapter", "syn status: " + syncStatusEvent.status);
+        if(syncStatusEvent.status == StickyEvents.SyncStatusEvent.FINISHED) {
+            populateData();
+        }
+    }
+
+    private void setResultMarker() {
+        StickyEvents.CurrentMarkerEvent event = EventBus.getDefault()
+                .getStickyEvent(StickyEvents.CurrentMarkerEvent.class);
+        if(event != null) {
+            resultMarker = event.marker;
+        }
+    }
+
+    private List<Notice> getEventsFromMarker(Marker marker) {
+        if(marker != null) {
+            List<Notice> notices = Notice.find(Notice.class,
+                    "venue_id=? order by start_time", Long.toString(marker.getId()));
+            return notices;
+        }
+        else{
+            return new ArrayList<>();
+        }
+    }
 
     @Override
     public int getGroupCount() {
@@ -120,6 +177,8 @@ public abstract class BaseNoticesListAdapter extends BaseExpandableListAdapter {
             holder.iconExpand.setImageResource(R.drawable.ic_action_next_item);
         }
 
+        ExpandableListView mExpandableListView = (ExpandableListView) parent;
+        mExpandableListView.expandGroup(groupPosition);
         return convertView;
     }
 

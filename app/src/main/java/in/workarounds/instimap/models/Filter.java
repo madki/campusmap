@@ -2,12 +2,14 @@ package in.workarounds.instimap.models;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.orm.dsl.Ignore;
 
 import java.util.Date;
 
 public class Filter extends ExtendedSugarRecord<Filter> {
+    @Ignore
+    public String syncUrl = "filters/modified";
 
-    @SerializedName("id")
     long dbId;
     @SerializedName("notice_id")
     long NoticeId;
@@ -28,10 +30,17 @@ public class Filter extends ExtendedSugarRecord<Filter> {
     Date created;
     Date modified;
 
+    @Override
+    public String getSyncUrl() {
+        return syncUrl;
+    }
+
+    @Override
     public long getDbId() {
         return dbId;
     }
 
+    @Override
     public void setDbId(long dbId) {
         this.dbId = dbId;
     }
@@ -108,6 +117,7 @@ public class Filter extends ExtendedSugarRecord<Filter> {
         this.created = created;
     }
 
+    @Override
     public Date getModified() {
         return modified;
     }

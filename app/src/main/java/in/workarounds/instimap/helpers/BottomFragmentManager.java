@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
 import in.designlabs.instimap.R;
-import in.workarounds.instimap.fragments.MapFragment;
-import in.workarounds.instimap.fragments.NoticesFragment;
+import in.workarounds.instimap.fragments.map.MapFragment;
+import in.workarounds.instimap.fragments.notice.NoticesFragment;
 
 public class BottomFragmentManager {
     private Context context;
