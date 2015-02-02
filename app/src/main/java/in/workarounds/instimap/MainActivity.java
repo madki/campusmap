@@ -52,6 +52,9 @@ public class MainActivity extends ActionBarActivity {
             case R.id.index_icon:
                 topFragmentManager.openIndexFragment();
                 return true;
+            case R.id.settings_icon:
+                topFragmentManager.openSettingsFragment();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -77,7 +80,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void startFragments() {
-        bottomFragmentManager.openNoticesFragment();
+        bottomFragmentManager.openMapFragment();
     }
 
     private void setUpActionBar() {

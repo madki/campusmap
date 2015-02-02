@@ -83,6 +83,8 @@ public class SearchFragment extends EventFragment implements AdapterView.OnItemC
         index.setVisible(false);
         MenuItem search = menu.findItem(R.id.search_icon);
         search.setVisible(false);
+        MenuItem settings = menu.findItem(R.id.settings_icon);
+        settings.setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

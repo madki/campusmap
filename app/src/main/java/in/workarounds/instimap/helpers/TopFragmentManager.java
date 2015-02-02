@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
 import in.designlabs.instimap.R;
+import in.workarounds.instimap.fragments.SettingsFragment;
 import in.workarounds.instimap.fragments.map.IndexFragment;
 import in.workarounds.instimap.fragments.map.SearchFragment;
 
@@ -18,6 +19,7 @@ public class TopFragmentManager {
     private Fragment activeFragment = null;
     private SearchFragment searchFragment;
     private IndexFragment indexFragment;
+    private SettingsFragment settingsFragment;
 
     private String FIRST_STACK_TAG = "first_tag";
 
@@ -27,6 +29,7 @@ public class TopFragmentManager {
 
         searchFragment = new SearchFragment();
         indexFragment = new IndexFragment();
+        settingsFragment = new SettingsFragment();
     }
 
     public void openSearchFragment() {
@@ -35,6 +38,10 @@ public class TopFragmentManager {
 
     public void openIndexFragment() {
        openFragment(indexFragment);
+    }
+
+    public void openSettingsFragment() {
+        openFragment(settingsFragment);
     }
 
     private void openFragment(Fragment fragment) {

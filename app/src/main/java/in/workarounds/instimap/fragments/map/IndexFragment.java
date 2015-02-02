@@ -31,6 +31,8 @@ public class IndexFragment extends EventFragment implements ExpandableListView.O
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+
         markers = getData();
         adapter = new IndexAdapter(getActivity(), markers);
         super.onCreate(savedInstanceState);
@@ -48,6 +50,10 @@ public class IndexFragment extends EventFragment implements ExpandableListView.O
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         MenuItem index = menu.findItem(R.id.index_icon);
         index.setVisible(false);
+        MenuItem search = menu.findItem(R.id.search_icon);
+        search.setVisible(false);
+        MenuItem settings = menu.findItem(R.id.settings_icon);
+        settings.setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

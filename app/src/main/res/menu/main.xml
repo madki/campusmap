@@ -2,12 +2,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/search_icon"
-        android:icon="@drawable/search"
+        android:icon="@drawable/action_search"
         app:showAsAction="always"
-        android:title="Index" />
+        android:title="Search" />
     <item
         android:id="@+id/index_icon"
         android:icon="@drawable/dept_menu"
         app:showAsAction="always"
         android:title="Index" />
+    <item
+        android:id="@+id/settings_icon"
+        android:icon="@drawable/settings"
+        app:showAsAction="always"
+        android:title="Settings" />
 </menu>
