@@ -1,7 +1,6 @@
 package in.workarounds.instimap.fragments;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.List;
 
@@ -19,7 +18,16 @@ public class NoticesListAdapter extends BaseNoticesListAdapter {
     @Override
     protected List<Notice> getNoticesList() {
         List<Notice> notices = Notice.find(Notice.class, "is_event = 1 order by start_time");
-        Log.d("NoticesListAdapter", "size = " + notices.size());
         return notices;
     }
+
+//    private void test(Notice notice){
+//        String dataJson = notice.getDataJson();
+//
+//        Gson gson = new GsonBuilder()
+//                .registerTypeAdapter(Block.class, new BlockDeserializer())
+//                .create();
+//
+//        NoticeData noticeData = gson.fromJson(dataJson, NoticeData.class);
+//    }
 }

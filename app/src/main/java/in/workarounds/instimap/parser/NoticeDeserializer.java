@@ -35,7 +35,6 @@ public class NoticeDeserializer
         notice.setDataJson(data);
         notice.setCornersJson(corners);
 
-        Log.d("NoticeDeserializer", "is_event: " + notice.isEvent());
         if(!notice.isEvent()) {
             Log.d("NoticeDeserializer", "notice: " + notice.getTitle());
             notice.setStartTime(new Date());
